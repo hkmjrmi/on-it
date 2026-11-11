@@ -43,8 +43,6 @@ class DatabaseSeeder extends Seeder
         ]);
 
         if (app()->isLocal()) {
-            User::factory()->randomlyVerified()->count(50)->create();
-
             $this->call(IssueSeeder::class);
         }
     }
