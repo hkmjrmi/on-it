@@ -18,6 +18,7 @@ Alpine.data('ListPage', () =>
         filterBy(params) {
             Object.assign(this.params, { status: 'all', assignee: 'all', open: 0, released_this_week: 0, page: 1 }, params);
             this.load();
+            document.getElementById('all-issues')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
         },
 
         open(issue) {

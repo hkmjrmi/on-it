@@ -12,7 +12,7 @@
             'rel' => 'preload',
             'as' => 'style',
         ],
-        config('services.cloudflare.fonts.enabled') ? '' : 'https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap' => [
+        config('services.cloudflare.fonts.enabled') ? '' : 'https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap' => [
             'rel' => 'preload',
             'as' => 'style',
         ],
