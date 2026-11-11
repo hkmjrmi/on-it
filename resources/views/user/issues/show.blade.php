@@ -3,7 +3,7 @@
 @section('title', $issue->key)
 
 @section('content')
-    <div class="col-md-12">
+    <div class="col-md-12" x-data="IssuePage()">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ route('user.main') }}">{{ __('Dashboard') }}</a></li>
@@ -12,7 +12,16 @@
         </nav>
 
         <div class="mb-4">
-            <h2 class="h4 mb-2">{{ $issue->title }}</h2>
+            <div class="d-flex align-items-start gap-2 mb-2">
+                <h2 class="h4 mb-0 flex-grow-1 text-break">{{ $issue->title }}</h2>
+
+                @can('update', $issue)
+                    <button type="button" class="btn btn-outline-dark btn-sm text-nowrap" x-on:click="edit()">
+                        <span class="far fa-edit"></span>
+                        {{ __('Edit') }}
+                    </button>
+                @endcan
+            </div>
 
             <div class="d-flex flex-wrap gap-2">
                 <span class="badge {{ $issue->status->badgeClass() }}">{{ $issue->status->label() }}</span>
@@ -129,5 +138,35 @@
                 })
             );
         </script>
+    @endpush
+@endcan
+
+@push('js')
+    <script type="text/javascript">
+        Object.assign(window.PageData, {
+            issue: @json($issue->only(['key', 'title', 'description'])),
+            @can('update', $issue)
+                editFormRequest: {!! \App\Http\Requests\IssueRequest::extractJson(['method' => 'PATCH']) !!},
+            @endcan
+        });
+    </script>
+    <script type="text/javascript" src="{{ asset('views/user/issues/show.js') }}"></script>
+@endpush
+
+@can('update', $issue)
+    @push('templates')
+        <template id="issue_edit_modal">
+            <div class="mb-3">
+                <x-label for="title" required>{{ __('Title') }}</x-label>
+                <x-input type="text" name="title" x-model="data.title" />
+                <x-error for="title" />
+            </div>
+
+            <div>
+                <x-label for="description" required>{{ __('Description') }}</x-label>
+                <x-textarea name="description" rows="8" x-model="data.description" autosize />
+                <x-error for="description" />
+            </div>
+        </template>
     @endpush
 @endcan

@@ -65,6 +65,31 @@ class IssueController extends Controller
     }
 
     /**
+     * Update the title and description of the specified issue.
+     */
+    public function update(IssueRequest $request, Issue $issue)
+    {
+        Gate::authorize('update', $issue);
+
+        $issue->fill($request->validated());
+
+        if ($issue->isDirty()) {
+            DB::transaction(function () use ($request, $issue) {
+                $issue->save();
+
+                $issue->activities()->create([
+                    'user_id' => $request->user()->id,
+                    'action' => IssueActivityAction::Edited,
+                ]);
+            });
+        }
+
+        return response()->json([
+            'message' => __('Issue :key has been updated successfully.', ['key' => $issue->key]),
+        ]);
+    }
+
+    /**
      * Get the filtered, searched and sorted query for the issue list.
      */
     protected function listQuery(Request $request): Builder

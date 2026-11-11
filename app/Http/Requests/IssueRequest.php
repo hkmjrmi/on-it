@@ -23,15 +23,22 @@ class IssueRequest extends FormRequest
      */
     public function rules(): array
     {
-        return [
+        $rules = [
             'title' => ['required', 'string', 'max:255'],
-            'type' => ['required', 'enum:' . IssueType::class],
-            'priority' => ['required', 'enum:' . IssuePriority::class],
-            'merchant_name' => ['nullable', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:65535'],
-            'attachments' => ['nullable', 'array', 'max:5'],
-            'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf', 'max:5120'],
         ];
+
+        if ($this->conditions->isStoreAction) {
+            $rules += [
+                'type' => ['required', 'enum:' . IssueType::class],
+                'priority' => ['required', 'enum:' . IssuePriority::class],
+                'merchant_name' => ['nullable', 'string', 'max:255'],
+                'attachments' => ['nullable', 'array', 'max:5'],
+                'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf', 'max:5120'],
+            ];
+        }
+
+        return $rules;
     }
 
     /**
