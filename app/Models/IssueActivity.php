@@ -3,9 +3,12 @@
 namespace App\Models;
 
 use App\Enums\IssueActivityAction;
+use App\Enums\IssuePriority;
+use App\Enums\IssueStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Collection;
 
 class IssueActivity extends Model
 {
@@ -50,5 +53,34 @@ class IssueActivity extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Get the readable description of the activity.
+     *
+     * @param  \Illuminate\Support\Collection<int, string>  $userNames
+     */
+    public function description(Collection $userNames): string
+    {
+        $name = $this->user->name;
+
+        return match ($this->action) {
+            IssueActivityAction::Created => __(':name created the issue', ['name' => $name]),
+            IssueActivityAction::Edited => __(':name edited the title and description', ['name' => $name]),
+            IssueActivityAction::Commented => __(':name commented', ['name' => $name]),
+            IssueActivityAction::StatusChanged => __(':name changed status :from → :to', [
+                'name' => $name,
+                'from' => IssueStatus::tryFrom((string) $this->from_value)?->label() ?? '-',
+                'to' => IssueStatus::tryFrom((string) $this->to_value)?->label() ?? '-',
+            ]),
+            IssueActivityAction::PriorityChanged => __(':name changed priority :from → :to', [
+                'name' => $name,
+                'from' => IssuePriority::tryFrom((string) $this->from_value)?->label() ?? '-',
+                'to' => IssuePriority::tryFrom((string) $this->to_value)?->label() ?? '-',
+            ]),
+            IssueActivityAction::Assigned => $this->to_value
+                ? __(':name assigned the issue to :assignee', ['name' => $name, 'assignee' => $userNames[$this->to_value] ?? '-'])
+                : __(':name unassigned the issue', ['name' => $name]),
+        };
     }
 }
