@@ -20,6 +20,17 @@
     </div>
 </div>
 
+<div class="d-flex gap-2 mb-2" x-show="params.open == 1 || params.released_this_week == 1" @unless (request()->boolean('open') || request()->boolean('released_this_week')) x-cloak @endunless>
+    <span class="badge text-bg-light border" x-show="params.open == 1">
+        {{ __('Open issues only') }}
+        <a href="#" class="ms-1 text-reset text-decoration-none" x-on:click.prevent="params.open = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
+    </span>
+    <span class="badge text-bg-light border" x-show="params.released_this_week == 1">
+        {{ __('Released This Week') }}
+        <a href="#" class="ms-1 text-reset text-decoration-none" x-on:click.prevent="params.released_this_week = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
+    </span>
+</div>
+
 <x-listpage-searchbox class="mb-3" name="search_value" :placeholder="__('Search by title, key or merchant name')" />
 
 <div>{{ $issues->links() }}</div>

@@ -48,8 +48,9 @@ Route::middleware([
     SetUserLocale::class,
     IsUserBanned::using('user.login'),
 ])->group(function () {
-    // Main
-    Route::get('/', [User\MainController::class, 'index'])->name('main');
+    // Dashboard
+    Route::get('/', [User\IssueController::class, 'index'])->name('main');
+    Route::view('status-guide', 'user.issues.status_guide')->name('status_guide');
 
     // Issues
     Route::resource('issues', User\IssueController::class)->only(['index', 'create', 'store', 'show']);
