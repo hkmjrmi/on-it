@@ -14,5 +14,6 @@
 
 @section('sidebar-menu')
     <x-sidebar.link route="user.main" :active="['user.main', 'user.issues.*']" icon="fa-gauge-high">{{ __('Dashboard') }}</x-sidebar.link>
+    <x-sidebar.link route="user.my_issues" icon="fa-user-check">{{ __('My Issues') }}</x-sidebar.link>
     <x-sidebar.link route="user.status_guide" icon="fa-circle-question">{{ __('Status Guide') }}</x-sidebar.link>
 @endsection

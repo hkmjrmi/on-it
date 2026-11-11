@@ -53,6 +53,7 @@ Route::middleware([
     Route::view('status-guide', 'user.issues.status_guide')->name('status_guide');
 
     // Issues
+    Route::get('my-issues', [User\IssueController::class, 'mine'])->name('my_issues');
     Route::resource('issues', User\IssueController::class)->only(['index', 'create', 'store', 'show']);
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 

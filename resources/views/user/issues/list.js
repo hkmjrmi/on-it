@@ -12,6 +12,7 @@ Alpine.data('ListPage', () =>
             released_this_week: 0,
             search_value: '',
             sort: '-id',
+            ...(PageData.defaultParams ?? {}),
         },
 
         filterBy(params) {
