@@ -55,7 +55,36 @@
                     </div>
                 </div>
 
-                {{-- Comments and activity timeline go here --}}
+                <div class="card shadow-sm mb-4" id="comments">
+                    <div class="card-header">{{ __('Comments') }} ({{ $issue->comments->count() }})</div>
+                    <div class="card-body">
+                        @forelse ($issue->comments as $comment)
+                            <div @class(['pb-3 mb-3 border-bottom' => !$loop->last, 'mb-3' => $loop->last])>
+                                <div class="d-flex flex-wrap align-items-center gap-2 mb-1">
+                                    <strong>{{ $comment->user->name }}</strong>
+                                    <span class="badge text-bg-light border">{{ $comment->user->role->label() }}</span>
+                                    <small class="text-muted" title="{{ $comment->created_at }}">{{ $comment->created_at->diffForHumans() }}</small>
+                                </div>
+                                <div class="text-break" style="white-space: pre-line">{{ $comment->body }}</div>
+                            </div>
+                        @empty
+                            <p class="text-muted">{{ __('No comments yet.') }}</p>
+                        @endforelse
+
+                        @can('comment', $issue)
+                            <x-form x-data="CommentForm()" :action="route('user.issues.comments.store', $issue)">
+                                <x-textarea name="body" rows="3" :placeholder="__('Write a comment...')" autosize />
+                                <x-error for="body" />
+
+                                <div class="text-end mt-2">
+                                    <button type="submit" class="btn btn-primary btn-sm">{{ __('Comment') }}</button>
+                                </div>
+                            </x-form>
+                        @endcan
+                    </div>
+                </div>
+
+                {{-- Activity timeline goes here --}}
             </div>
 
             <div class="col-lg-4">
@@ -128,6 +157,18 @@
         </div>
     </div>
 @endsection
+
+@can('comment', $issue)
+    @push('js')
+        <script type="text/javascript">
+            Alpine.data('CommentForm', () =>
+                window.AlpineComponents.Form({
+                    formRequest: {!! \App\Http\Requests\IssueCommentRequest::extractJson() !!},
+                })
+            );
+        </script>
+    @endpush
+@endcan
 
 @can('changeWorkflow', $issue)
     @push('js')
