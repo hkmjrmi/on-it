@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\IssueActivityAction;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -22,6 +23,18 @@ class IssueActivity extends Model
         'from_value',
         'to_value',
     ];
+
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'action' => IssueActivityAction::class,
+        ];
+    }
 
     /**
      * Get the issue that owns the activity.

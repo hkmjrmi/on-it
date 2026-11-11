@@ -53,19 +53,45 @@
                 <div class="card shadow-sm">
                     <div class="card-header">{{ __('Details') }}</div>
                     <div class="card-body">
+                        @can('changeWorkflow', $issue)
+                            <x-form x-data="WorkflowForm()" is-patch :action="route('user.issues.workflow', $issue)" :bind-data="['status' => $issue->status->value, 'priority' => $issue->priority->value, 'assigned_to' => $issue->assigned_to]" class="mb-3">
+                                <div class="mb-2">
+                                    <x-label for="status">{{ __('Status') }}</x-label>
+                                    <x-select2 name="status" :options="\App\Enums\IssueStatus::labels()" autofill />
+                                    <x-error for="status" />
+                                </div>
+
+                                <div class="mb-2">
+                                    <x-label for="priority">{{ __('Priority') }}</x-label>
+                                    <x-select2 name="priority" :options="\App\Enums\IssuePriority::labels()" autofill />
+                                    <x-error for="priority" />
+                                </div>
+
+                                <div class="mb-3">
+                                    <x-label for="assigned_to">{{ __('Assignee') }}</x-label>
+                                    <x-select2 name="assigned_to" :options="['' => __('Unassigned')] + $assignees->all()" autofill />
+                                    <x-error for="assigned_to" />
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-sm">{{ __('Save') }}</button>
+                            </x-form>
+                        @endcan
+
                         <dl class="mb-0">
-                            <dt>{{ __('Status') }}</dt>
-                            <dd>
-                                <span class="badge {{ $issue->status->badgeClass() }}">{{ $issue->status->label() }}</span>
-                            </dd>
+                            @cannot('changeWorkflow', $issue)
+                                <dt>{{ __('Status') }}</dt>
+                                <dd>
+                                    <span class="badge {{ $issue->status->badgeClass() }}">{{ $issue->status->label() }}</span>
+                                </dd>
 
-                            <dt>{{ __('Priority') }}</dt>
-                            <dd>
-                                <span class="badge {{ $issue->priority->badgeClass() }}">{{ $issue->priority->label() }}</span>
-                            </dd>
+                                <dt>{{ __('Priority') }}</dt>
+                                <dd>
+                                    <span class="badge {{ $issue->priority->badgeClass() }}">{{ $issue->priority->label() }}</span>
+                                </dd>
 
-                            <dt>{{ __('Assignee') }}</dt>
-                            <dd>{{ $issue->assignee?->name ?? __('Unassigned') }}</dd>
+                                <dt>{{ __('Assignee') }}</dt>
+                                <dd>{{ $issue->assignee?->name ?? __('Unassigned') }}</dd>
+                            @endcannot
 
                             <dt>{{ __('Merchant') }}</dt>
                             <dd>{{ $issue->merchant_name ?? '-' }}</dd>
@@ -93,3 +119,15 @@
         </div>
     </div>
 @endsection
+
+@can('changeWorkflow', $issue)
+    @push('js')
+        <script type="text/javascript">
+            Alpine.data('WorkflowForm', () =>
+                window.AlpineComponents.Form({
+                    formRequest: {!! \App\Http\Requests\IssueWorkflowRequest::extractJson() !!},
+                })
+            );
+        </script>
+    @endpush
+@endcan

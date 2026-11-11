@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\IssueActivityAction;
 use App\Models\Issue;
 use App\Models\IssueActivity;
 use App\Models\User;
@@ -22,7 +23,7 @@ class IssueActivityFactory extends Factory
         return [
             'issue_id' => Issue::factory(),
             'user_id' => User::factory(),
-            'action' => 'created',
+            'action' => IssueActivityAction::Created,
             'from_value' => null,
             'to_value' => null,
         ];
