@@ -1,0 +1,33 @@
+{
+    "$schema": "https://json.schemastore.org/package.json",
+    "private": true,
+    "scripts": {
+        "dev": "npm run development",
+        "development": "rspack --mode=development",
+        "watch": "rspack --mode=development --watch",
+        "prod": "npm run production",
+        "production": "rspack",
+        "postinstall": "node vendor/onpay/laravel-core/scripts/patch-alpinejs.js"
+    },
+    "devDependencies": {
+        "@alpinejs/collapse": "^3.17.1",
+        "@alpinejs/intersect": "^3.17.1",
+        "@alpinejs/persist": "^3.17.1",
+        "@dotenvx/dotenvx": "^2.23.0",
+        "@hafizuddin/rspack-plugins": "^0.4.1",
+        "@popperjs/core": "^2.11.8",
+        "@rspack/cli": "^2.2.2",
+        "@rspack/core": "^2.2.2",
+        "alpinejs": "^3.17.1",
+        "axios": "^1.20.0",
+        "bootstrap": "^5.3.8",
+        "browserslist": "^4.28.9",
+        "prettier": "^3.9.6",
+        "prettier-plugin-blade": "^2.1.21",
+        "purgecss": "^8.0.0",
+        "quival": "^0.5.7",
+        "sass": "^1.104.0",
+        "sass-embedded": "^1.104.0",
+        "sass-loader": "^17.0.1"
+    }
+}
