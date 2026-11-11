@@ -54,7 +54,7 @@ Route::middleware([
 
     // Issues
     Route::get('my-issues', [User\IssueController::class, 'mine'])->name('my_issues');
-    Route::resource('issues', User\IssueController::class)->only(['index', 'create', 'store', 'show']);
+    Route::resource('issues', User\IssueController::class)->only(['index', 'create', 'store', 'show', 'update']);
     Route::patch('issues/{issue}/workflow', User\IssueWorkflowController::class)->name('issues.workflow');
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 
