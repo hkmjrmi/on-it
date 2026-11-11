@@ -51,6 +51,9 @@ Route::middleware([
     // Main
     Route::get('/', [User\MainController::class, 'index'])->name('main');
 
+    // Issues
+    Route::resource('issues', User\IssueController::class)->only(['create', 'store']);
+
     // Profile
     Route::name('profile.')->prefix('profile')->group(function () {
         Route::singleton('user', Profile\UserController::class);

@@ -25,6 +25,17 @@ enum IssueSource: string
     }
 
     /**
+     * Get the source of issues created by the given role.
+     */
+    public static function fromRole(UserRole $role): self
+    {
+        return match ($role) {
+            UserRole::CustomerSupport => self::CustomerReport,
+            UserRole::Programmer => self::Internal,
+        };
+    }
+
+    /**
      * Get all labels.
      */
     #[ForJs]

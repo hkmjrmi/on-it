@@ -14,4 +14,5 @@
 
 @section('sidebar-menu')
     <x-sidebar.link route="user.main" icon="fa-gauge-high">{{ __('Main') }}</x-sidebar.link>
+    <x-sidebar.link route="user.issues.create" icon="fa-circle-plus">{{ __('New Issue') }}</x-sidebar.link>
 @endsection
