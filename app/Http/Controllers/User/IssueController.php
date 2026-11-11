@@ -215,7 +215,12 @@ class IssueController extends Controller
     {
         Gate::authorize('view', $issue);
 
-        $issue->load(['creator', 'assignee', 'attachments.user']);
+        $issue->load([
+            'creator',
+            'assignee',
+            'attachments.user',
+            'comments' => fn ($query) => $query->with('user:id,name,role')->oldest('id'),
+        ]);
 
         $assignees = $this->assigneeOptions();
 

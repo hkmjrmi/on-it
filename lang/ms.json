@@ -22,7 +22,9 @@
     "Change Password": "Tukar Kata Laluan",
     "click here to request another": "klik di sini untuk memohon sekali lagi",
     "Close menu": "Tutup menu",
+    "Comment": "Ulas",
     "Commented": "Mengulas",
+    "Comments": "Ulasan",
     "Complaint": "Aduan",
     "Confirm": "Sahkan",
     "Confirm new password...": "Sahkan kata laluan baharu...",
@@ -100,6 +102,7 @@
     "New Password Confirmation": "Pengesahan Kata Laluan Baharu",
     "No": "Tidak",
     "No attachments.": "Tiada lampiran.",
+    "No comments yet.": "Belum ada ulasan.",
     "No issues found.": "Tiada isu dijumpai.",
     "Not sure what a status means?": "Tidak pasti maksud sesuatu status?",
     "Online Users": "Pengguna Dalam Talian",
@@ -158,6 +161,8 @@
     "View User": "Papar Pengguna",
     "Welcome :name!": "Selamat Datang :name!",
     "Will not be worked on, for example a duplicate or not a bug.": "Tidak akan diselesaikan, contohnya pendua atau bukan pepijat.",
+    "Write a comment...": "Tulis ulasan...",
     "Yes": "Ya",
-    "You may upload up to :max files.": "Anda boleh memuat naik sehingga :max fail."
+    "You may upload up to :max files.": "Anda boleh memuat naik sehingga :max fail.",
+    "Your comment has been added.": "Ulasan anda telah ditambah."
 }
