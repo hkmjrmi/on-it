@@ -58,6 +58,14 @@ class Issue extends Model
     }
 
     /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'key';
+    }
+
+    /**
      * Get the user who created the issue.
      */
     public function creator(): BelongsTo

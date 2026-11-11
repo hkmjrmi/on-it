@@ -50,7 +50,19 @@ class IssueController extends Controller
             return $issue;
         });
 
-        return redirect(route('user.main'))
+        return redirect(route('user.issues.show', $issue))
             ->withSuccessNotification(__('Issue :key has been created successfully.', ['key' => $issue->key]));
+    }
+
+    /**
+     * Display the specified issue.
+     */
+    public function show(Issue $issue)
+    {
+        Gate::authorize('view', $issue);
+
+        $issue->load(['creator', 'assignee', 'attachments']);
+
+        return view('user.issues.show', compact('issue'));
     }
 }

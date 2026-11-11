@@ -52,7 +52,7 @@ Route::middleware([
     Route::get('/', [User\MainController::class, 'index'])->name('main');
 
     // Issues
-    Route::resource('issues', User\IssueController::class)->only(['create', 'store']);
+    Route::resource('issues', User\IssueController::class)->only(['create', 'store', 'show']);
 
     // Profile
     Route::name('profile.')->prefix('profile')->group(function () {
