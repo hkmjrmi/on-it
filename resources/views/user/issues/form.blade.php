@@ -22,13 +22,19 @@
                         </div>
 
                         <div class="row g-3 mb-3">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <x-label for="system" required>{{ __('System') }}</x-label>
+                                <x-select2 name="system" :options="\App\Enums\IssueSystem::labels()" :placeholder="__('Select system...')" autofill />
+                                <x-error for="system" />
+                            </div>
+
+                            <div class="col-md-4">
                                 <x-label for="type" required>{{ __('Type') }}</x-label>
                                 <x-select2 name="type" :options="\App\Enums\IssueType::labels()" :placeholder="__('Select type...')" autofill />
                                 <x-error for="type" />
                             </div>
 
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <x-label for="priority" required>{{ __('Priority') }}</x-label>
                                 <x-select2 name="priority" :options="\App\Enums\IssuePriority::labels()" autofill />
                                 <x-help>{{ __('Urgent = merchant cannot operate (e.g. cannot take payments)') }}</x-help>

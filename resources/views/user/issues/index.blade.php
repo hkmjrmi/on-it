@@ -161,6 +161,7 @@
 @push('js')
     @enum(\App\Enums\IssueStatus::class)
     @enum(\App\Enums\IssueType::class)
+    @enum(\App\Enums\IssueSystem::class)
     @enum(\App\Enums\IssuePriority::class)
 
     <script type="text/javascript">

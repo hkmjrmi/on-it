@@ -215,6 +215,11 @@
                         @endcan
 
                         <div class="mb-3">
+                            <div class="field-label">{{ __('System') }}</div>
+                            {{ $issue->system?->label() ?? '-' }}
+                        </div>
+
+                        <div class="mb-3">
                             <div class="field-label">{{ __('Merchant') }}</div>
                             {{ $issue->merchant_name ?? '-' }}
                         </div>

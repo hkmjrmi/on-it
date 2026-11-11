@@ -1,7 +1,7 @@
 <article class="issue-card">
     <header class="issue-card-head">
         <h3>
-            <span class="issue-card-key">{{ $issue->key }}</span>
+            <span class="issue-card-key">{{ $issue->key }}@if ($issue->system) · {{ $issue->system->label() }}@endif</span>
             <a class="text-reset" href="{{ route('user.issues.show', $issue) }}">{{ $issue->title }}</a>
         </h3>
 

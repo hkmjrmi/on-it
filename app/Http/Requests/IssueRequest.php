@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\IssuePriority;
+use App\Enums\IssueSystem;
 use App\Enums\IssueType;
 use Onpay\Core\Http\FormRequest;
 
@@ -31,6 +32,7 @@ class IssueRequest extends FormRequest
         if ($this->conditions->isStoreAction) {
             $rules += [
                 'type' => ['required', 'enum:' . IssueType::class],
+                'system' => ['required', 'enum:' . IssueSystem::class],
                 'priority' => ['required', 'enum:' . IssuePriority::class],
                 'merchant_name' => ['nullable', 'string', 'max:255'],
                 'attachments' => ['nullable', 'array', 'max:5'],
