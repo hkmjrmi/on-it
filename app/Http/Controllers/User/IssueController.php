@@ -5,14 +5,64 @@ namespace App\Http\Controllers\User;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
 use App\Enums\IssueStatus;
+use App\Enums\IssueType;
+use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IssueRequest;
 use App\Models\Issue;
+use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class IssueController extends Controller
 {
+    /**
+     * Display a listing of the issues.
+     */
+    public function index(Request $request)
+    {
+        Gate::authorize('viewAny', Issue::class);
+
+        $sort = $request->query('sort');
+
+        // Get the query builder
+        $query = Issue::query();
+
+        // Filters
+        $query->status($request->enum('status', IssueStatus::class))
+            ->type($request->enum('type', IssueType::class))
+            ->priority($request->enum('priority', IssuePriority::class))
+            ->assignee($request->query('assignee'));
+
+        // Search
+        $query->searchWildcard($request->query('search_value'), ['title', 'key', 'merchant_name']);
+
+        // Sort
+        $validSortColumns = ['id', 'title', 'priority', 'status', 'created_at'];
+
+        $query->resolveSortString($sort, 'id', 'desc', $validSortColumns);
+
+        // Get the result
+        $columns = ['id', 'key', 'title', 'type', 'priority', 'status', 'assigned_to', 'created_at'];
+
+        $issues = $query->select($columns)
+            ->with('assignee:id,name')
+            ->paginate(20)
+            ->withIndexPathAndQueryString();
+
+        if ($request->wantsJson()) {
+            return $issues;
+        }
+
+        $assignees = User::query()
+            ->where('role', UserRole::Programmer)
+            ->orderBy('name')
+            ->pluck('name', 'id');
+
+        return view('user.issues.index', compact('issues', 'assignees'));
+    }
+
     /**
      * Show the form for creating a new issue.
      */
