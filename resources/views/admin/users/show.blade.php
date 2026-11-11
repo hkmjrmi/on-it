@@ -20,6 +20,10 @@
                         <td>{{ $user->email_verified_at }}</td>
                     </tr>
                     <tr>
+                        <th>{{ __('Role') }}</th>
+                        <td>{{ $user->role->label() }}</td>
+                    </tr>
+                    <tr>
                         <th>{{ __('Language') }}</th>
                         <td>{{ common_data('locales')[$user->locale] ?? '' }}</td>
                     </tr>

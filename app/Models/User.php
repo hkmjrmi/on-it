@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Observers\UserObserver;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -30,6 +31,7 @@ class User extends Authenticatable implements BannableContract, MustVerifyEmail
         'name',
         'email',
         'password',
+        'role',
         'locale',
         'timezone',
     ];
@@ -54,9 +56,26 @@ class User extends Authenticatable implements BannableContract, MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'role' => UserRole::class,
             'last_login_at' => 'datetime',
             'last_online_at' => 'datetime',
         ];
+    }
+
+    /**
+     * Determine if the user is a programmer.
+     */
+    public function isProgrammer(): bool
+    {
+        return $this->role === UserRole::Programmer;
+    }
+
+    /**
+     * Determine if the user is a customer support.
+     */
+    public function isCustomerSupport(): bool
+    {
+        return $this->role === UserRole::CustomerSupport;
     }
 
     /**

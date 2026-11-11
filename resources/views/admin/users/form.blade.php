@@ -29,6 +29,16 @@
             </div>
 
             <div class="row mb-3">
+                <x-label for="role" class="col-md-2">{{ __('Role') }}</x-label>
+
+                <div class="col-md-6 pt-2">
+                    <x-radio inline name="role" :options="\App\Enums\UserRole::labels()" autofill />
+
+                    <x-error for="role" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
                 <x-label for="locale" class="col-md-2">{{ __('Language') }}</x-label>
 
                 <div class="col-md-6 pt-2">

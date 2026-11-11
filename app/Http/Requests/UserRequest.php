@@ -2,6 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserRole;
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 use Onpay\Core\Http\FormRequest;
@@ -30,6 +32,10 @@ class UserRequest extends FormRequest
             'password_confirmation' => ['sometimes', 'required', 'string', 'min:8', 'same:password'],
             'locale' => ['sometimes', 'required', 'in:en,ms'],
         ];
+
+        if ($this->conditions->user instanceof Admin) {
+            $rules['role'] = ['required', 'enum:' . UserRole::class];
+        }
 
         if ($this->conditions->user === null) {
             $rules['password'][] = 'confirmed';

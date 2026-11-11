@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -30,8 +31,29 @@ class UserFactory extends Factory
             'email' => str($name)->slug()->append('@', fake()->safeEmailDomain())->value(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('abcd1234'),
+            'role' => fake()->randomElement(UserRole::cases()),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Indicate that the user is a programmer.
+     */
+    public function programmer(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Programmer,
+        ]);
+    }
+
+    /**
+     * Indicate that the user is a customer support.
+     */
+    public function customerSupport(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::CustomerSupport,
+        ]);
     }
 
     /**
