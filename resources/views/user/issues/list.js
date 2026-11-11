@@ -6,6 +6,7 @@ Alpine.data('ListPage', () =>
             page: 1,
             status: 'all',
             type: 'all',
+            system: 'all',
             priority: 'all',
             assignee: 'all',
             open: 0,

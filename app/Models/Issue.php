@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
 use App\Enums\IssueStatus;
+use App\Enums\IssueSystem;
 use App\Enums\IssueType;
 use App\Observers\IssueObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
@@ -35,6 +36,7 @@ class Issue extends Model
         'title',
         'description',
         'type',
+        'system',
         'priority',
         'status',
         'source',
@@ -53,6 +55,7 @@ class Issue extends Model
     {
         return [
             'type' => IssueType::class,
+            'system' => IssueSystem::class,
             'priority' => IssuePriority::class,
             'status' => IssueStatus::class,
             'source' => IssueSource::class,
@@ -141,6 +144,16 @@ class Issue extends Model
     {
         if ($type) {
             $query->where('type', $type);
+        }
+    }
+
+    /**
+     * Scope a query to only include issues for the given system.
+     */
+    public function scopeSystem(Builder $query, IssueSystem|null $system): void
+    {
+        if ($system) {
+            $query->where('system', $system);
         }
     }
 

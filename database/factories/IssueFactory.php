@@ -5,6 +5,7 @@ namespace Database\Factories;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
 use App\Enums\IssueStatus;
+use App\Enums\IssueSystem;
 use App\Enums\IssueType;
 use App\Models\Issue;
 use App\Models\User;
@@ -29,6 +30,7 @@ class IssueFactory extends Factory
             'title' => str(fake()->sentence(6))->rtrim('.')->value(),
             'description' => fake()->paragraphs(2, true),
             'type' => fake()->randomElement(IssueType::cases()),
+            'system' => fake()->randomElement(IssueSystem::cases()),
             'priority' => fake()->randomElement(IssuePriority::cases()),
             'status' => $status,
             'source' => $source,

@@ -6,6 +6,7 @@ use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
 use App\Enums\IssueStatus;
+use App\Enums\IssueSystem;
 use App\Enums\IssueType;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
@@ -100,6 +101,7 @@ class IssueController extends Controller
         return Issue::query()
             ->status($request->enum('status', IssueStatus::class))
             ->type($request->enum('type', IssueType::class))
+            ->system($request->enum('system', IssueSystem::class))
             ->priority($request->enum('priority', IssuePriority::class))
             ->assignee($request->query('assignee'))
             ->when($request->boolean('open'), fn (Builder $query) => $query->open())
@@ -113,7 +115,7 @@ class IssueController extends Controller
      */
     protected function paginate(Builder $query): LengthAwarePaginator
     {
-        return $query->select(['id', 'key', 'title', 'type', 'priority', 'status', 'assigned_to', 'created_at'])
+        return $query->select(['id', 'key', 'title', 'type', 'system', 'priority', 'status', 'assigned_to', 'created_at'])
             ->with('assignee:id,name')
             ->paginate(20)
             ->withQueryString();
