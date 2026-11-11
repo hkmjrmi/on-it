@@ -948,34 +948,9 @@ $onit-priorities: (
     }
 }
 
-.issue-card-tilt-wrap {
-    position: relative;
-}
-
-.issue-card-tilt {
-    margin: 6px 4px;
-    transform: rotate(-2.2deg);
-    transition: transform 0.25s ease;
-
-    &:hover {
-        transform: rotate(0deg);
-    }
-}
-
 .issue-card-faded {
     -webkit-mask-image: linear-gradient(#000 55%, transparent);
     mask-image: linear-gradient(#000 55%, transparent);
-}
-
-.opie-cursor-float {
-    position: absolute;
-    right: -92px;
-    top: 46%;
-    width: 104px;
-    height: auto;
-    transform: rotate(8deg);
-    animation: opie-bob 3.4s ease-in-out infinite;
-    pointer-events: none;
 }
 
 .attention-head {
@@ -1092,10 +1067,6 @@ $onit-priorities: (
 
     .dash-right {
         order: 1;
-    }
-
-    .opie-cursor-float {
-        display: none;
     }
 }
 
@@ -1554,11 +1525,17 @@ $onit-priorities: (
     color: var(--onit-muted);
 }
 
+.lp-role {
+    font-size: 1.15em;
+    font-weight: 700;
+    color: var(--onit-navy);
+}
+
 .lp-card-request {
     animation: bubble-in 0.5s ease-out 0.2s both;
 }
 
-.lp-cards .issue-card-tilt-wrap {
+.lp-card-reply {
     animation: bubble-pop 0.5s cubic-bezier(0.3, 1.5, 0.6, 1) 1.2s both;
 }
 
@@ -1647,10 +1624,6 @@ $onit-priorities: (
     background: #fff;
     border-radius: var(--onit-radius-card);
     box-shadow: var(--onit-shadow-card);
-
-    &:nth-child(2) {
-        transform: rotate(-1.5deg);
-    }
 
     h3 {
         margin: 0 0 8px;

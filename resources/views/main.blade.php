@@ -50,7 +50,7 @@
                 <span class="pill pill-lilac">{{ __('Internal tool · CGE & ITD') }}</span>
                 <p class="lp-hero-question">{{ __('Got an issue to resolve?') }}</p>
                 <div class="lp-hero-answer">ON IT!!</div>
-                <p class="lp-hero-text">{{ __('Customer Support logs the issue. Programmers fix it. Everyone sees exactly where it stands, in plain words.') }}</p>
+                <p class="lp-hero-text">{!! __('<strong class="lp-role">Customer Support</strong> logs the issue. <strong class="lp-role">Programmers</strong> fix it. Everyone sees exactly where it stands, in plain words.') !!}</p>
                 <div class="d-flex flex-wrap gap-2">
                     <a class="btn btn-primary btn-lg" href="{{ $signInUrl }}">{{ auth('user')->check() ? $signInLabel : __('Sign in to get started') }}</a>
                     <a class="btn btn-outline btn-lg" href="#lp-how">{{ __('How it works') }}</a>
@@ -83,20 +83,18 @@
                     </dl>
                 </article>
 
-                <div class="issue-card-tilt-wrap">
-                    <article class="issue-card issue-card-tilt lp-card-reply">
-                        <img class="lp-reply-opie" src="{{ asset('images/opie/reply.webp') }}" alt="" />
-                        <div class="lp-reply-body">
-                            <span class="pill pill-navy">{{ __('Opie · Programmer team') }}</span>
-                            <div class="lp-reply-text">On IT!!</div>
-                            <p class="text-muted">{{ __('Picked up in minutes. CGE can follow every step from here.') }}</p>
-                            <a class="btn btn-dark" href="{{ $signInUrl }}">
-                                <span class="sparkle me-1">✦</span>
-                                {{ __('Track progress') }}
-                            </a>
-                        </div>
-                    </article>
-                </div>
+                <article class="issue-card lp-card-reply">
+                    <img class="lp-reply-opie" src="{{ asset('images/opie/reply.webp') }}" alt="" />
+                    <div class="lp-reply-body">
+                        <span class="pill pill-navy">{{ __('Opie · Programmer team') }}</span>
+                        <div class="lp-reply-text">On IT!!</div>
+                        <p class="text-muted">{{ __('Picked up in minutes. CGE can follow every step from here.') }}</p>
+                        <a class="btn btn-dark" href="{{ $signInUrl }}">
+                            <span class="sparkle me-1">✦</span>
+                            {{ __('Track progress') }}
+                        </a>
+                    </div>
+                </article>
             </div>
 
             {{-- Why OnIT --}}

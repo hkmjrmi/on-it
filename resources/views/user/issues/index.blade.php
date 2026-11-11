@@ -93,12 +93,7 @@
             <div class="dash-center">
                 @forelse ($spotlight as $issue)
                     @if ($loop->iteration === 2)
-                        <div class="issue-card-tilt-wrap">
-                            <div class="issue-card-tilt">
-                                @include('user.issues.spotlight_card', ['action' => 'dark'])
-                            </div>
-                            <img class="opie-cursor-float" src="{{ asset('images/opie/pointer.webp') }}" alt="" />
-                        </div>
+                        @include('user.issues.spotlight_card', ['action' => 'dark'])
                     @elseif ($loop->iteration === 3)
                         <div class="issue-card-faded">
                             @include('user.issues.spotlight_card', ['action' => 'dark'])

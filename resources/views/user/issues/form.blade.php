@@ -72,7 +72,7 @@
         <div class="col-lg-4 col-xl-3">
             <aside class="card opie-tip">
                 <div class="card-body">
-                    <img src="{{ asset('images/opie/pointer.webp') }}" alt="" />
+                    <img src="{{ asset('images/opie/waving.webp') }}" alt="" />
                     <h4>{{ __("Opie's tips for a faster fix") }}</h4>
                     <ul>
                         <li>{{ __('Add a screenshot of the problem') }}</li>

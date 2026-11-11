@@ -76,7 +76,7 @@
     "Customer Report": "Laporan Pelanggan",
     "Customer Support": "Khidmat Pelanggan",
     "Customer Support asks Opie to investigate an issue, and Opie replies On IT": "Khidmat Pelanggan meminta Opie menyiasat isu, dan Opie menjawab On IT",
-    "Customer Support logs the issue. Programmers fix it. Everyone sees exactly where it stands, in plain words.": "Khidmat Pelanggan merekod isu. Pengaturcara membaikinya. Semua orang tahu statusnya dalam bahasa yang mudah.",
+    "<strong class=\"lp-role\">Customer Support</strong> logs the issue. <strong class=\"lp-role\">Programmers</strong> fix it. Everyone sees exactly where it stands, in plain words.": "<strong class=\"lp-role\">Khidmat Pelanggan</strong> merekod isu. <strong class=\"lp-role\">Pengaturcara</strong> membaikinya. Semua orang tahu statusnya dalam bahasa yang mudah.",
     "Dashboard": "Papan Pemuka",
     "Describe what happened, steps to reproduce and what is expected...": "Terangkan apa yang berlaku, langkah untuk menghasilkan semula dan apa yang dijangka...",
     "Description": "Penerangan",
