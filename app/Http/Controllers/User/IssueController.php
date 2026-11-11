@@ -220,10 +220,15 @@ class IssueController extends Controller
             'assignee',
             'attachments.user',
             'comments' => fn ($query) => $query->with('user:id,name,role')->oldest('id'),
+            'activities' => fn ($query) => $query->with('user:id,name')->latest('id'),
         ]);
+
+        $activityUserNames = User::query()
+            ->whereIn('id', $issue->activities->where('action', IssueActivityAction::Assigned)->pluck('to_value')->filter())
+            ->pluck('name', 'id');
 
         $assignees = $this->assigneeOptions();
 
-        return view('user.issues.show', compact('issue', 'assignees'));
+        return view('user.issues.show', compact('issue', 'assignees', 'activityUserNames'));
     }
 }

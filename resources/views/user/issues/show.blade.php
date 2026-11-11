@@ -84,7 +84,19 @@
                     </div>
                 </div>
 
-                {{-- Activity timeline goes here --}}
+                <div class="card shadow-sm mb-4">
+                    <div class="card-header">{{ __('Activity') }}</div>
+                    <ul class="list-group list-group-flush">
+                        @forelse ($issue->activities as $activity)
+                            <li class="list-group-item d-flex justify-content-between gap-3">
+                                <span class="text-break">{{ $activity->description($activityUserNames) }}</span>
+                                <small class="text-muted text-nowrap" title="{{ $activity->created_at }}">{{ $activity->created_at->diffForHumans() }}</small>
+                            </li>
+                        @empty
+                            <li class="list-group-item text-muted">{{ __('No activity yet.') }}</li>
+                        @endforelse
+                    </ul>
+                </div>
             </div>
 
             <div class="col-lg-4">
