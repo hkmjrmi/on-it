@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
 use App\Enums\IssueStatus;
@@ -159,7 +160,7 @@ class IssueController extends Controller
 
             $issue->activities()->create([
                 'user_id' => $user->id,
-                'action' => 'created',
+                'action' => IssueActivityAction::Created,
             ]);
 
             $disk = config('filesystems.attachments');
@@ -191,6 +192,8 @@ class IssueController extends Controller
 
         $issue->load(['creator', 'assignee', 'attachments.user']);
 
-        return view('user.issues.show', compact('issue'));
+        $assignees = $this->assigneeOptions();
+
+        return view('user.issues.show', compact('issue', 'assignees'));
     }
 }
