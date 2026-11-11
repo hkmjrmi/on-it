@@ -3,48 +3,54 @@
 @section('title', __('Account Profile'))
 
 @section('content')
-    <div class="col-md-12 mx-auto">
-        <x-form x-data="Form()" is-put :action="route('user.profile.user.update')" :bind-data="$user">
-            <div class="row mb-3">
-                <x-label for="name" class="col-md-2">{{ __('Name') }}</x-label>
+    <div class="onit-page-header">
+        <h1>@yield('title')</h1>
+    </div>
 
-                <div class="col-md-5">
-                    <x-input type="text" name="name" autofill />
+    <div class="card">
+        <div class="card-body">
+            <x-form x-data="Form()" is-put :action="route('user.profile.user.update')" :bind-data="$user">
+                <div class="row mb-3">
+                    <x-label for="name" class="col-md-2">{{ __('Name') }}</x-label>
 
-                    <x-error for="name" />
+                    <div class="col-md-5">
+                        <x-input type="text" name="name" autofill />
+
+                        <x-error for="name" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3">
-                <x-label for="email" class="col-md-2">{{ __('Email') }}</x-label>
+                <div class="row mb-3">
+                    <x-label for="email" class="col-md-2">{{ __('Email') }}</x-label>
 
-                <div class="col-md-5">
-                    <x-input type="email" name="email" autofill />
+                    <div class="col-md-5">
+                        <x-input type="email" name="email" autofill />
 
-                    <x-error for="email" />
+                        <x-error for="email" />
+                    </div>
                 </div>
-            </div>
 
-            <div class="row mb-3">
-                <x-label for="locale" class="col-md-2">{{ __('Language') }}</x-label>
+                <div class="row mb-3">
+                    <x-label for="locale" class="col-md-2">{{ __('Language') }}</x-label>
 
-                <div class="col-md-5 pt-2">
-                    <x-radio inline name="locale" :options="common_data('locales')" autofill />
+                    <div class="col-md-5 pt-2">
+                        <x-radio inline name="locale" :options="common_data('locales')" autofill />
 
-                    <x-error for="locale" />
+                        <x-error for="locale" />
+                    </div>
                 </div>
-            </div>
 
-            <hr />
+                <hr />
 
-            <div class="row mb-3">
-                <div class="col-md-5 offset-md-2">
-                    <button type="submit" class="btn btn-primary">
-                        {{ __('Update') }}
-                    </button>
+                <div class="row mb-3">
+                    <div class="col-md-5 offset-md-2">
+                        <button type="submit" class="btn btn-primary">
+                            {{ __('Update') }}
+                        </button>
+                    </div>
                 </div>
-            </div>
-        </x-form>
+            </x-form>
+        </div>
     </div>
 @endsection
 
