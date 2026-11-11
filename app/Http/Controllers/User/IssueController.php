@@ -14,6 +14,7 @@ use App\Models\Issue;
 use App\Models\User;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection as EloquentCollection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -36,8 +37,10 @@ class IssueController extends Controller
 
         $assignees = $this->assigneeOptions();
         $summary = $this->summary();
+        $spotlight = $this->spotlight();
+        $team = User::query()->orderBy('name')->get(['id', 'name', 'role']);
 
-        return view('user.issues.index', compact('issues', 'assignees', 'summary'));
+        return view('user.issues.index', compact('issues', 'assignees', 'summary', 'spotlight', 'team'));
     }
 
     /**
@@ -146,12 +149,32 @@ class IssueController extends Controller
             ...collect([IssueStatus::New, IssueStatus::InDevelopment, IssueStatus::InReview, IssueStatus::ReadyToRelease])
                 ->mapWithKeys(fn (IssueStatus $status) => [$status->value => (int) ($statusCounts[$status->value] ?? 0)])
                 ->all(),
+            'open' => Issue::query()->open()->count(),
+            'need_info' => Issue::query()->status(IssueStatus::NeedInfo)->count(),
             'released_this_week' => Issue::query()->releasedThisWeek()->count(),
             'unassigned' => Issue::query()
                 ->open()
                 ->assignee('unassigned')
                 ->count(),
         ];
+    }
+
+    /**
+     * Get the most pressing open issues for the dashboard cards.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection<int, \App\Models\Issue>
+     */
+    protected function spotlight(): EloquentCollection
+    {
+        $priorityOrder = collect(IssuePriority::cases())->reverse()->values()->map(fn (IssuePriority $priority) => $priority->value);
+
+        return Issue::query()
+            ->open()
+            ->with(['creator:id,name,role', 'assignee:id,name,role'])
+            ->orderByRaw('case priority ' . $priorityOrder->map(fn ($value, $index) => "when '{$value}' then {$index}")->implode(' ') . ' end')
+            ->latest('id')
+            ->limit(3)
+            ->get();
     }
 
     /**
