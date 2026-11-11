@@ -13,6 +13,6 @@
 @endsection
 
 @section('sidebar-menu')
-    <x-sidebar.link route="user.main" icon="fa-gauge-high">{{ __('Main') }}</x-sidebar.link>
-    <x-sidebar.link route="user.issues.index" active="user.issues.*" icon="fa-list-check">{{ __('Issues') }}</x-sidebar.link>
+    <x-sidebar.link route="user.main" :active="['user.main', 'user.issues.*']" icon="fa-gauge-high">{{ __('Dashboard') }}</x-sidebar.link>
+    <x-sidebar.link route="user.status_guide" icon="fa-circle-question">{{ __('Status Guide') }}</x-sidebar.link>
 @endsection

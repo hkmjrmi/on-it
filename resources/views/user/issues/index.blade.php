@@ -17,6 +17,8 @@
             </div>
         </div>
 
+        @include('user.issues.summary')
+
         @include('user.issues.list')
     </div>
 @endsection

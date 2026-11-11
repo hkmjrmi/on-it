@@ -33,7 +33,9 @@ class IssueController extends Controller
         $query->status($request->enum('status', IssueStatus::class))
             ->type($request->enum('type', IssueType::class))
             ->priority($request->enum('priority', IssuePriority::class))
-            ->assignee($request->query('assignee'));
+            ->assignee($request->query('assignee'))
+            ->when($request->boolean('open'), fn ($query) => $query->open())
+            ->when($request->boolean('released_this_week'), fn ($query) => $query->releasedThisWeek());
 
         // Search
         $query->searchWildcard($request->query('search_value'), ['title', 'key', 'merchant_name']);
@@ -49,7 +51,7 @@ class IssueController extends Controller
         $issues = $query->select($columns)
             ->with('assignee:id,name')
             ->paginate(20)
-            ->withIndexPathAndQueryString();
+            ->withQueryString();
 
         if ($request->wantsJson()) {
             return $issues;
@@ -60,7 +62,34 @@ class IssueController extends Controller
             ->orderBy('name')
             ->pluck('name', 'id');
 
-        return view('user.issues.index', compact('issues', 'assignees'));
+        $summary = $this->summary();
+
+        return view('user.issues.index', compact('issues', 'assignees', 'summary'));
+    }
+
+    /**
+     * Get the issue counts for the dashboard summary cards.
+     *
+     * @return array<string, int>
+     */
+    protected function summary(): array
+    {
+        $statusCounts = Issue::query()
+            ->whereIn('status', [IssueStatus::New, IssueStatus::InDevelopment, IssueStatus::InReview, IssueStatus::ReadyToRelease])
+            ->groupBy('status')
+            ->selectRaw('status, count(*) as total')
+            ->pluck('total', 'status');
+
+        return [
+            ...collect([IssueStatus::New, IssueStatus::InDevelopment, IssueStatus::InReview, IssueStatus::ReadyToRelease])
+                ->mapWithKeys(fn (IssueStatus $status) => [$status->value => (int) ($statusCounts[$status->value] ?? 0)])
+                ->all(),
+            'released_this_week' => Issue::query()->releasedThisWeek()->count(),
+            'unassigned' => Issue::query()
+                ->open()
+                ->assignee('unassigned')
+                ->count(),
+        ];
     }
 
     /**

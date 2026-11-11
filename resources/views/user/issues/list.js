@@ -8,8 +8,15 @@ Alpine.data('ListPage', () =>
             type: 'all',
             priority: 'all',
             assignee: 'all',
+            open: 0,
+            released_this_week: 0,
             search_value: '',
             sort: '-id',
+        },
+
+        filterBy(params) {
+            Object.assign(this.params, { status: 'all', assignee: 'all', open: 0, released_this_week: 0, page: 1 }, params);
+            this.load();
         },
 
         open(issue) {

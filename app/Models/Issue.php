@@ -119,6 +119,22 @@ class Issue extends Model
     }
 
     /**
+     * Scope a query to only include open issues.
+     */
+    public function scopeOpen(Builder $query): void
+    {
+        $query->whereNotIn('status', IssueStatus::closed());
+    }
+
+    /**
+     * Scope a query to only include issues released this week.
+     */
+    public function scopeReleasedThisWeek(Builder $query): void
+    {
+        $query->status(IssueStatus::Released)->where('released_at', '>=', now()->startOfWeek());
+    }
+
+    /**
      * Scope a query to only include issues of the given type.
      */
     public function scopeType(Builder $query, IssueType|null $type): void

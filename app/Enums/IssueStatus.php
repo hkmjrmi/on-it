@@ -35,6 +35,22 @@ enum IssueStatus: string
     }
 
     /**
+     * Get the description for the case.
+     */
+    public function description(): string
+    {
+        return match ($this) {
+            self::New => __('Reported and waiting for a Programmer to pick it up.'),
+            self::InDevelopment => __('A Programmer is working on it.'),
+            self::InReview => __('The fix is done and being reviewed or tested.'),
+            self::ReadyToRelease => __('Approved and waiting for the next release.'),
+            self::Released => __('The fix is live for merchants.'),
+            self::NeedInfo => __('More details are needed from the reporter before work can continue.'),
+            self::Rejected => __('Will not be worked on, for example a duplicate or not a bug.'),
+        };
+    }
+
+    /**
      * Get the context for the case.
      */
     public function context(): string
@@ -80,6 +96,16 @@ enum IssueStatus: string
             self::ReadyToRelease,
             self::Released,
         ];
+    }
+
+    /**
+     * Get the statuses of closed issues.
+     *
+     * @return array<int, self>
+     */
+    public static function closed(): array
+    {
+        return [self::Released, self::Rejected];
     }
 
     /**
