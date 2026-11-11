@@ -8,15 +8,18 @@ use App\Enums\IssueStatus;
 use App\Enums\IssueType;
 use App\Observers\IssueObserver;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Onpay\Core\Eloquent\Concerns\SortStringResolver;
+use Onpay\Core\Eloquent\Concerns\ValueSearcher;
 
 #[ObservedBy(IssueObserver::class)]
 class Issue extends Model
 {
-    use HasFactory;
+    use HasFactory, SortStringResolver, ValueSearcher;
 
     /**
      * The prefix of the issue key.
@@ -103,5 +106,47 @@ class Issue extends Model
     public function activities(): HasMany
     {
         return $this->hasMany(IssueActivity::class);
+    }
+
+    /**
+     * Scope a query to only include issues with the given status.
+     */
+    public function scopeStatus(Builder $query, IssueStatus|null $status): void
+    {
+        if ($status) {
+            $query->where('status', $status);
+        }
+    }
+
+    /**
+     * Scope a query to only include issues of the given type.
+     */
+    public function scopeType(Builder $query, IssueType|null $type): void
+    {
+        if ($type) {
+            $query->where('type', $type);
+        }
+    }
+
+    /**
+     * Scope a query to only include issues with the given priority.
+     */
+    public function scopePriority(Builder $query, IssuePriority|null $priority): void
+    {
+        if ($priority) {
+            $query->where('priority', $priority);
+        }
+    }
+
+    /**
+     * Scope a query to only include issues assigned to the given user, or unassigned issues.
+     */
+    public function scopeAssignee(Builder $query, string|null $assignee): void
+    {
+        match (true) {
+            $assignee === 'unassigned' => $query->whereNull('assigned_to'),
+            is_numeric($assignee) => $query->where('assigned_to', (int) $assignee),
+            default => $query,
+        };
     }
 }

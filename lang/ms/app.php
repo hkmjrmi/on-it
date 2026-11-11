@@ -12,5 +12,6 @@ return [
     */
 
     'footer' => 'Satu projek oleh :organization &copy; :year',
+    'issue_count' => '[0] Tiada isu|[1,*] :count isu',
     'user_count' => '[0] Tiada pengguna|[1,*] :count pengguna',
 ];
