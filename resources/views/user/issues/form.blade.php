@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="col-md-12">
-        <x-form x-data="Form()" :action="route('user.issues.store')" :bind-data="$issue">
+        <x-form x-data="Form()" has-files :action="route('user.issues.store')" :bind-data="$issue">
             <div class="row mb-3">
                 <x-label for="title" class="col-md-2" required>{{ __('Title') }}</x-label>
 
@@ -56,6 +56,19 @@
                     <x-textarea name="description" rows="6" placeholder="{{ __('Describe what happened, steps to reproduce and what is expected...') }}" autosize autofill />
 
                     <x-error for="description" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <x-label for="attachments" class="col-md-2">{{ __('Attachments') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-input type="file" name="attachments[]" id="attachments" accept="image/*,application/pdf" multiple />
+
+                    <x-help>{{ __('Images or PDF, up to 5 files, 5 MB each.') }}</x-help>
+
+                    <x-error for="attachments" />
+                    <x-error for="attachments.*" />
                 </div>
             </div>
 

@@ -29,6 +29,22 @@ class IssueRequest extends FormRequest
             'priority' => ['required', 'enum:' . IssuePriority::class],
             'merchant_name' => ['nullable', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:65535'],
+            'attachments' => ['nullable', 'array', 'max:5'],
+            'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf', 'max:5120'],
+        ];
+    }
+
+    /**
+     * Get custom messages for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'attachments.max' => __('You may upload up to :max files.'),
+            'attachments.*.mimes' => __('Only images and PDF files are allowed.'),
+            'attachments.*.max' => __('Each file may not be larger than 5 MB.'),
         ];
     }
 }
