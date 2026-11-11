@@ -36,7 +36,7 @@ class IssueController extends Controller
 
         $issue = DB::transaction(function () use ($request, $user) {
             $issue = Issue::create([
-                ...$request->validated(),
+                ...$request->safe()->except('attachments'),
                 'source' => IssueSource::fromRole($user->role),
                 'status' => IssueStatus::New,
                 'created_by' => $user->id,
@@ -46,6 +46,19 @@ class IssueController extends Controller
                 'user_id' => $user->id,
                 'action' => 'created',
             ]);
+
+            $disk = config('filesystems.attachments');
+
+            foreach ($request->file('attachments', []) as $file) {
+                $issue->attachments()->create([
+                    'user_id' => $user->id,
+                    'disk' => $disk,
+                    'path' => $file->store('issues/' . $issue->id, $disk),
+                    'original_name' => $file->getClientOriginalName(),
+                    'mime_type' => $file->getMimeType(),
+                    'size_bytes' => $file->getSize(),
+                ]);
+            }
 
             return $issue;
         });
@@ -61,7 +74,7 @@ class IssueController extends Controller
     {
         Gate::authorize('view', $issue);
 
-        $issue->load(['creator', 'assignee', 'attachments']);
+        $issue->load(['creator', 'assignee', 'attachments.user']);
 
         return view('user.issues.show', compact('issue'));
     }

@@ -17,6 +17,18 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Issue Attachments Disk
+    |--------------------------------------------------------------------------
+    |
+    | The disk where issue attachments are stored. It must be a private disk
+    | since attachments are only served to signed-in users.
+    |
+    */
+
+    'attachments' => env('ATTACHMENTS_DISK', 'local'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Filesystem Disks
     |--------------------------------------------------------------------------
     |

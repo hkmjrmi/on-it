@@ -53,6 +53,7 @@ Route::middleware([
 
     // Issues
     Route::resource('issues', User\IssueController::class)->only(['create', 'store', 'show']);
+    Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 
     // Profile
     Route::name('profile.')->prefix('profile')->group(function () {

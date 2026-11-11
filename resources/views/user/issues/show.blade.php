@@ -36,7 +36,10 @@
                     <div class="card-header">{{ __('Attachments') }}</div>
                     <div class="card-body">
                         @forelse ($issue->attachments as $attachment)
-                            <x-info-item icon="fa-solid fa-paperclip">{{ $attachment->original_name }}</x-info-item>
+                            <x-info-item icon="fa-solid fa-paperclip">
+                                <a href="{{ route('user.attachments.show', $attachment) }}" target="_blank" class="text-break">{{ $attachment->original_name }}</a>
+                                <small class="text-muted ms-2">{{ Number::fileSize($attachment->size_bytes) }} · {{ $attachment->user->name }}</small>
+                            </x-info-item>
                         @empty
                             <p class="text-muted mb-0">{{ __('No attachments.') }}</p>
                         @endforelse

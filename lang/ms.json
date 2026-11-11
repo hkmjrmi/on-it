@@ -36,6 +36,7 @@
     "Do you want to ban this user?": "Adakah anda mahu menyekat pengguna ini?",
     "Do you want to delete this user?": "Adakah anda mahu memadam pengguna ini?",
     "Do you want to unban this user?": "Adakah anda mahu menyahsekat pengguna ini?",
+    "Each file may not be larger than 5 MB.": "Setiap fail tidak boleh melebihi 5 MB.",
     "Email": "Emel",
     "Email Password Reset Link": "Link Penetapan Semula Kata Laluan Emel",
     "Email Verified At": "Emel Disahkan Pada",
@@ -52,6 +53,7 @@
     "Forgot Password": "Lupa Kata Laluan",
     "Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.": "Terlupa kata laluan anda? Tiada masalah. Hanya beritahu kami alamat emel anda dan kami akan menghantar link penetapan semula kata laluan yang membolehkan anda memilih kata laluan baharu.",
     "High": "Tinggi",
+    "Images or PDF, up to 5 files, 5 MB each.": "Imej atau PDF, sehingga 5 fail, 5 MB setiap satu.",
     "In Development": "Dalam Pembangunan",
     "In Review": "Dalam Semakan",
     "inactive": "belum aktif",
@@ -83,6 +85,7 @@
     "No": "Tidak",
     "No attachments.": "Tiada lampiran.",
     "Online Users": "Pengguna Dalam Talian",
+    "Only images and PDF files are allowed.": "Hanya fail imej dan PDF dibenarkan.",
     "Password": "Kata Laluan",
     "Priority": "Keutamaan",
     "Programmer": "Pengaturcara",
@@ -125,5 +128,6 @@
     "Verify Your Email Address": "Sahkan Alamat Emel Anda",
     "View User": "Papar Pengguna",
     "Welcome :name!": "Selamat Datang :name!",
-    "Yes": "Ya"
+    "Yes": "Ya",
+    "You may upload up to :max files.": "Anda boleh memuat naik sehingga :max fail."
 }
