@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
 use Onpay\Core\Auth\Authenticatable;
 use Onpay\Core\Eloquent\Concerns\Bannable;
@@ -136,5 +137,13 @@ class User extends Authenticatable implements BannableContract, HasLocalePrefere
     public function scopeReceivesNotifications(Builder $query): void
     {
         $query->whereNotNull('email_verified_at')->whereNull('banned_at');
+    }
+
+    /**
+     * Get the saved issue filters of the user.
+     */
+    public function savedFilters(): HasMany
+    {
+        return $this->hasMany(SavedFilter::class);
     }
 }

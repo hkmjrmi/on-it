@@ -25,6 +25,32 @@
 </div>
 
 <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <div class="dropdown">
+        <button type="button" class="btn btn-outline btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <span class="far fa-bookmark me-1" aria-hidden="true"></span>
+            {{ __('Saved filters') }}
+        </button>
+        <div class="dropdown-menu" style="min-width: 280px">
+            <template x-for="filter in savedFilters" x-bind:key="filter.id">
+                <div class="d-flex align-items-center gap-2 px-3 py-1">
+                    <a href="#" class="flex-grow-1 text-reset text-decoration-none text-truncate" x-on:click.prevent="applyFilter(filter)" x-text="filter.name"></a>
+                    <button type="button" class="btn btn-link btn-sm p-0 text-muted" x-on:click="renameFilter(filter)" title="{{ __('Rename') }}" aria-label="{{ __('Rename') }}">
+                        <span class="far fa-edit" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="btn btn-link btn-sm p-0 text-danger" x-on:click="removeFilter(filter)" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
+                        <span class="far fa-trash-alt" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </template>
+            <span class="dropdown-item-text small text-muted" x-show="savedFilters.length === 0">{{ __('No saved filters yet.') }}</span>
+            <hr class="dropdown-divider" />
+            <button type="button" class="dropdown-item" x-on:click="saveFilter()">
+                <span class="fas fa-plus me-1" aria-hidden="true"></span>
+                {{ __('Save current filters') }}
+            </button>
+        </div>
+    </div>
+
     <span class="onit-filter-chip" x-show="params.open == 1" @unless (request()->boolean('open')) x-cloak @endunless>
         {{ __('Open issues only') }}
         <a href="#" x-on:click.prevent="params.open = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
@@ -85,3 +111,20 @@
     <span x-text="trans_choice(@js(__('app.issue_count')), data.meta.total, { count: data.meta.total.toLocaleString() })">{{ trans_choice(__('app.issue_count'), $issues->total(), ['count' => number_format($issues->total())]) }}</span>
     <div>{{ $issues->links() }}</div>
 </div>
+
+@push('js')
+    <script type="text/javascript">
+        Object.assign(window.PageData, {
+            savedFilters: @json(auth()->user()->savedFilters()->orderBy('name')->get(['id', 'name', 'params'])),
+            savedFilterRequest: {!! \App\Http\Requests\SavedFilterRequest::extractJson(['method' => 'PATCH']) !!},
+        });
+    </script>
+@endpush
+
+@push('templates')
+    <template id="saved_filter_modal">
+        <x-label for="saved_filter_name" required>{{ __('Filter name') }}</x-label>
+        <x-input type="text" name="name" id="saved_filter_name" x-model="data.name" :placeholder="__('e.g. My urgent OnPay bugs')" maxlength="100" />
+        <x-error for="name" />
+    </template>
+@endpush
