@@ -24,15 +24,20 @@
     </div>
 </div>
 
-<div class="d-flex flex-wrap gap-2 mb-3" x-show="params.open == 1 || params.released_this_week == 1" @unless (request()->boolean('open') || request()->boolean('released_this_week')) x-cloak @endunless>
-    <span class="onit-filter-chip" x-show="params.open == 1">
+<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+    <span class="onit-filter-chip" x-show="params.open == 1" @unless (request()->boolean('open')) x-cloak @endunless>
         {{ __('Open issues only') }}
         <a href="#" x-on:click.prevent="params.open = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
     </span>
-    <span class="onit-filter-chip" x-show="params.released_this_week == 1">
+    <span class="onit-filter-chip" x-show="params.released_this_week == 1" @unless (request()->boolean('released_this_week')) x-cloak @endunless>
         {{ __('Released This Week') }}
         <a href="#" x-on:click.prevent="params.released_this_week = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
     </span>
+
+    <div class="form-check form-switch ms-auto mb-0">
+        <input class="form-check-input" type="checkbox" role="switch" id="filter-archived" x-bind:checked="params.archived == 1" x-on:change="params.archived = $event.target.checked ? 1 : 0; params.page = 1; load()" @checked(request()->boolean('archived')) />
+        <label class="form-check-label small" for="filter-archived">{{ __('Archived issues only') }}</label>
+    </div>
 </div>
 
 <x-listpage-table>

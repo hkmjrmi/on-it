@@ -29,6 +29,12 @@
                     <span class="badge {{ $issue->status->badgeClass() }}">{{ $issue->status->label() }}</span>
                     <span class="badge {{ $issue->priority->badgeClass() }}">{{ $issue->priority->label() }}</span>
                     <span class="text-muted">{{ $issue->type->label() }}</span>
+
+                    @if ($issue->isArchived())
+                        <span class="badge bg-secondary" title="{{ $issue->archived_at }}">
+                            <span class="fas fa-box-archive me-1" aria-hidden="true"></span>{{ __('Archived') }}
+                        </span>
+                    @endif
                 </div>
             </div>
 
@@ -47,6 +53,20 @@
                     </a>
                 @endcan
 
+                @can('archive', $issue)
+                    <x-button-form class="btn btn-outline text-nowrap" :action="route('user.issues.archive', $issue)">
+                        <span class="fas fa-box-archive me-1" aria-hidden="true"></span>
+                        {{ __('Archive') }}
+                    </x-button-form>
+                @endcan
+
+                @can('unarchive', $issue)
+                    <x-button-form class="btn btn-outline text-nowrap" :action="route('user.issues.unarchive', $issue)" method="DELETE">
+                        <span class="fas fa-box-open me-1" aria-hidden="true"></span>
+                        {{ __('Unarchive') }}
+                    </x-button-form>
+                @endcan
+
                 @can('delete', $issue)
                     <button type="button" class="btn btn-outline-danger text-nowrap" x-on:click="remove()">
                         <span class="far fa-trash-alt me-1" aria-hidden="true"></span>
@@ -55,6 +75,13 @@
                 @endcan
             </div>
         </div>
+
+        @if ($issue->isArchived())
+            <div class="alert alert-secondary">
+                <span class="fas fa-box-archive me-1" aria-hidden="true"></span>
+                {{ __('This issue is archived and hidden from the dashboard and issue lists.') }}
+            </div>
+        @endif
 
         <div class="row g-4 align-items-start">
             <div class="col-lg-8">

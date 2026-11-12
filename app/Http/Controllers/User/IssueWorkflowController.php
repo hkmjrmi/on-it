@@ -28,6 +28,12 @@ class IssueWorkflowController extends Controller
             $issue->released_at = $issue->status === IssueStatus::Released ? now() : null;
         }
 
+        $reopened = $issue->isArchived() && !$issue->status->in(IssueStatus::closed());
+
+        if ($reopened) {
+            $issue->archived_at = null;
+        }
+
         $actions = [
             'status' => IssueActivityAction::StatusChanged,
             'priority' => IssueActivityAction::PriorityChanged,
@@ -42,7 +48,13 @@ class IssueWorkflowController extends Controller
                 'from_value' => $issue->getRawOriginal($column),
                 'to_value' => $issue->getAttributes()[$column],
             ])
-            ->values();
+            ->values()
+            ->when($reopened, fn ($activities) => $activities->push([
+                'user_id' => $request->user()->id,
+                'action' => IssueActivityAction::Unarchived,
+                'from_value' => null,
+                'to_value' => null,
+            ]));
 
         $user = $request->user();
         $statusChanged = $issue->isDirty('status');

@@ -18,6 +18,8 @@ enum IssueActivityAction: string
     case Commented = 'commented';
     case CommentEdited = 'comment_edited';
     case CommentDeleted = 'comment_deleted';
+    case Archived = 'archived';
+    case Unarchived = 'unarchived';
 
     /**
      * Get the label for the case.
@@ -33,6 +35,8 @@ enum IssueActivityAction: string
             self::Commented => __('Commented'),
             self::CommentEdited => __('Comment Edited'),
             self::CommentDeleted => __('Comment Deleted'),
+            self::Archived => __('Archived'),
+            self::Unarchived => __('Unarchived'),
         };
     }
 

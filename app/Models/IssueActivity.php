@@ -72,6 +72,8 @@ class IssueActivity extends Model
             IssueActivityAction::Commented => __(':name commented', ['name' => $name]),
             IssueActivityAction::CommentEdited => __(':name edited a comment', ['name' => $name]),
             IssueActivityAction::CommentDeleted => __(':name deleted a comment', ['name' => $name]),
+            IssueActivityAction::Archived => __(':name archived the issue', ['name' => $name]),
+            IssueActivityAction::Unarchived => __(':name unarchived the issue', ['name' => $name]),
             IssueActivityAction::StatusChanged => __(':name changed status :from → :to', [
                 'name' => $name,
                 'from' => IssueStatus::tryFrom((string) $this->from_value)?->label() ?? '-',

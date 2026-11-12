@@ -66,7 +66,7 @@ class IssueController extends Controller
         }
 
         $assignees = $this->assigneeOptions();
-        $counts = array_map(fn (string $column) => Issue::query()->where($column, $user->id)->count(), $tabColumns);
+        $counts = array_map(fn (string $column) => Issue::query()->archived(false)->where($column, $user->id)->count(), $tabColumns);
 
         return view('user.issues.mine', compact('issues', 'assignees', 'counts', 'tab', 'defaultTab'));
     }
@@ -122,6 +122,7 @@ class IssueController extends Controller
             ->system($request->enum('system', IssueSystem::class))
             ->priority($request->enum('priority', IssuePriority::class))
             ->assignee($request->query('assignee'))
+            ->archived($request->boolean('archived'))
             ->when($request->boolean('open'), fn (Builder $query) => $query->open())
             ->when($request->boolean('released_this_week'), fn (Builder $query) => $query->releasedThisWeek())
             ->searchWildcard($request->query('search_value'), ['title', 'key', 'merchant_name'])
@@ -177,7 +178,7 @@ class IssueController extends Controller
                 ->all(),
             'open' => Issue::query()->open()->count(),
             'need_info' => Issue::query()->status(IssueStatus::NeedInfo)->count(),
-            'released_this_week' => Issue::query()->releasedThisWeek()->count(),
+            'released_this_week' => Issue::query()->archived(false)->releasedThisWeek()->count(),
             'unassigned' => Issue::query()
                 ->open()
                 ->assignee('unassigned')

@@ -362,5 +362,15 @@
     "Copy of :title": "Salinan :title",
     ":name created the issue (cloned from :key)": ":name mencipta isu ini (diklon daripada :key)",
     "Cloned from :key. Comments, attachments, status and assignee are not copied.": "Diklon daripada :key. Komen, lampiran, status dan penerima tugasan tidak disalin.",
-    "Clone": "Klon"
+    "Clone": "Klon",
+    "Archived": "Diarkibkan",
+    "Unarchived": "Dikeluarkan daripada Arkib",
+    ":name archived the issue": ":name mengarkibkan isu ini",
+    ":name unarchived the issue": ":name mengeluarkan isu ini daripada arkib",
+    "Issue :key has been archived.": "Isu :key telah diarkibkan.",
+    "Issue :key has been unarchived.": "Isu :key telah dikeluarkan daripada arkib.",
+    "Archive": "Arkib",
+    "Unarchive": "Keluarkan daripada Arkib",
+    "Archived issues only": "Isu diarkibkan sahaja",
+    "This issue is archived and hidden from the dashboard and issue lists.": "Isu ini diarkibkan dan disembunyikan daripada papan pemuka dan senarai isu."
 }
