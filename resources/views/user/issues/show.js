@@ -1,4 +1,38 @@
 Alpine.data('IssuePage', () => ({
+    remove() {
+        abmodal({
+            message: __('Do you want to delete this issue?') + '<br>' + eh(PageData.issue.key + ' ' + PageData.issue.title) + '<br><small class="text-muted">' + __('This cannot be undone.') + '</small>',
+            onEscape: true,
+            buttons: {
+                yes: {
+                    label: __('Yes'),
+                    className: 'btn-danger',
+                    callback: () => {
+                        Helper.showPageSpinner();
+
+                        axios
+                            .delete(zroute('user.issues.destroy', PageData.issue.key))
+                            .then((response) => {
+                                Bolt.once('unload', () => {
+                                    Helper.removePageSpinner();
+                                    Helper.showNotificationSuccess(response.data.message);
+                                });
+
+                                Bolt.go(response.data.redirect);
+                            })
+                            .catch((error) => {
+                                Helper.removePageSpinner();
+                                Helper.showNotificationError(error.response?.data?.message);
+                            });
+                    },
+                },
+                no: {
+                    label: __('No'),
+                },
+            },
+        });
+    },
+
     edit() {
         abmodal({
             isForm: true,

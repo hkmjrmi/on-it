@@ -143,7 +143,7 @@ class UserController extends Controller
      */
     public function destroy(Request $request, User $user)
     {
-        $hasIssueHistory = Issue::query()->where('created_by', $user->id)->exists()
+        $hasIssueHistory = Issue::withTrashed()->where('created_by', $user->id)->exists()
             || IssueComment::query()->where('user_id', $user->id)->exists()
             || IssueAttachment::query()->where('user_id', $user->id)->exists()
             || IssueActivity::query()->where('user_id', $user->id)->exists();

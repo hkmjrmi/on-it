@@ -345,5 +345,9 @@
     "What to do next: :message": "Apa yang perlu dilakukan seterusnya: :message",
     "What you can tell the customer: \":message\"": "Apa yang anda boleh beritahu pelanggan: \":message\"",
     "New comment on :title": "Komen baharu pada :title",
-    ":name commented on **:title**:": ":name telah mengulas pada **:title**:"
+    ":name commented on **:title**:": ":name telah mengulas pada **:title**:",
+    "Issue :key has been deleted successfully.": "Isu :key telah berjaya dipadam.",
+    "Do you want to delete this issue?": "Adakah anda mahu memadam isu ini?",
+    "This cannot be undone.": "Tindakan ini tidak boleh dibatalkan.",
+    "Delete": "Padam"
 }

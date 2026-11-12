@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\IssueStatus;
 use App\Models\Issue;
 use App\Models\User;
 
@@ -37,6 +38,14 @@ class IssuePolicy
     public function update(User $user, Issue $issue): bool
     {
         return $user->id === $issue->created_by;
+    }
+
+    /**
+     * Determine whether the user can delete the issue.
+     */
+    public function delete(User $user, Issue $issue): bool
+    {
+        return $user->id === $issue->created_by && $issue->status === IssueStatus::New;
     }
 
     /**

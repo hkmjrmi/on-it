@@ -32,12 +32,21 @@
                 </div>
             </div>
 
-            @can('update', $issue)
-                <button type="button" class="btn btn-outline text-nowrap" x-on:click="edit()">
-                    <span class="far fa-edit me-1" aria-hidden="true"></span>
-                    {{ __('Edit') }}
-                </button>
-            @endcan
+            <div class="d-flex flex-wrap gap-2">
+                @can('update', $issue)
+                    <button type="button" class="btn btn-outline text-nowrap" x-on:click="edit()">
+                        <span class="far fa-edit me-1" aria-hidden="true"></span>
+                        {{ __('Edit') }}
+                    </button>
+                @endcan
+
+                @can('delete', $issue)
+                    <button type="button" class="btn btn-outline-danger text-nowrap" x-on:click="remove()">
+                        <span class="far fa-trash-alt me-1" aria-hidden="true"></span>
+                        {{ __('Delete') }}
+                    </button>
+                @endcan
+            </div>
         </div>
 
         <div class="row g-4 align-items-start">
