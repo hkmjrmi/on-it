@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\IssueRequest;
 use App\Models\Issue;
 use App\Models\User;
+use App\Notifications\User\IssueCreatedNotification;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection as EloquentCollection;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 
 class IssueController extends Controller
 {
@@ -232,6 +234,11 @@ class IssueController extends Controller
 
             return $issue;
         });
+
+        Notification::send(
+            User::query()->receivesNotifications()->where('role', UserRole::Programmer)->whereKeyNot($user->id)->get(),
+            new IssueCreatedNotification($issue, $user),
+        );
 
         return redirect(route('user.issues.show', $issue))
             ->withSuccessNotification(__('Issue :key has been created successfully.', ['key' => $issue->key]));

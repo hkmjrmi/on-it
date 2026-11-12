@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use App\Enums\UserStatus;
 use App\Observers\UserObserver;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -18,7 +19,7 @@ use Onpay\Core\Eloquent\Concerns\ValueSearcher;
 use Onpay\Core\Eloquent\Contracts\Bannable as BannableContract;
 
 #[ObservedBy(UserObserver::class)]
-class User extends Authenticatable implements BannableContract, MustVerifyEmail
+class User extends Authenticatable implements BannableContract, HasLocalePreference, MustVerifyEmail
 {
     use Bannable, HasFactory, Notifiable, SortStringResolver, ValueSearcher;
 
@@ -95,6 +96,14 @@ class User extends Authenticatable implements BannableContract, MustVerifyEmail
     }
 
     /**
+     * Get the user's preferred locale.
+     */
+    public function preferredLocale(): string|null
+    {
+        return $this->locale;
+    }
+
+    /**
      * Get the user's status.
      */
     protected function status(): Attribute
@@ -119,5 +128,13 @@ class User extends Authenticatable implements BannableContract, MustVerifyEmail
             UserStatus::Banned => $query->whereNotNull('banned_at'),
             default => $query,
         };
+    }
+
+    /**
+     * Scope a query to only include users who can receive notifications.
+     */
+    public function scopeReceivesNotifications(Builder $query): void
+    {
+        $query->whereNotNull('email_verified_at')->whereNull('banned_at');
     }
 }
