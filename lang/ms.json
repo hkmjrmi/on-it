@@ -396,5 +396,19 @@
     "Rename": "Namakan semula",
     "Filter name": "Nama penapis",
     "e.g. My urgent OnPay bugs": "cth. Pepijat OnPay segera saya",
-    "Do you want to delete this saved filter?": "Adakah anda mahu memadam penapis tersimpan ini?"
+    "Do you want to delete this saved filter?": "Adakah anda mahu memadam penapis tersimpan ini?",
+    "You may update up to :max issues at a time.": "Anda boleh mengemaskini sehingga :max isu pada satu masa.",
+    "Not allowed": "Tidak dibenarkan",
+    "Already archived": "Sudah diarkibkan",
+    "Not closed": "Belum ditutup",
+    "No change": "Tiada perubahan",
+    ":count selected": ":count dipilih",
+    "Change status": "Tukar status",
+    "Change priority": "Tukar keutamaan",
+    "Assign to": "Tugaskan kepada",
+    "Apply": "Guna",
+    "Clear selection": "Kosongkan pilihan",
+    "Select all on this page": "Pilih semua di halaman ini",
+    "Select :key": "Pilih :key",
+    "Skipped": "Dilangkau"
 }

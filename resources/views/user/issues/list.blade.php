@@ -1,3 +1,5 @@
+@php($canBulk = auth()->user()->can('changeWorkflow', new \App\Models\Issue()))
+
 <div class="onit-filters row g-2 mb-3">
     <div class="col-12 col-lg-4">
         <x-listpage-searchbox name="search_value" :placeholder="__('Search by title, key or merchant name')" />
@@ -66,10 +68,50 @@
     </div>
 </div>
 
+@if ($canBulk)
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 border rounded" x-show="selected.length > 0" x-init="$watch('data', () => (selected = []))" x-cloak>
+        <strong class="me-1" x-text="__(':count selected', { count: selected.length })"></strong>
+
+        <select class="form-select form-select-sm w-auto" x-model="bulk.action" aria-label="{{ __('Action') }}">
+            <option value="status">{{ __('Change status') }}</option>
+            <option value="priority">{{ __('Change priority') }}</option>
+            <option value="assignee">{{ __('Assign to') }}</option>
+            <option value="archive">{{ __('Archive') }}</option>
+        </select>
+
+        <select class="form-select form-select-sm w-auto" x-model="bulk.status" x-show="bulk.action === 'status'" aria-label="{{ __('Status') }}">
+            @foreach (\App\Enums\IssueStatus::labels() as $value => $label)
+                <option value="{{ $value }}">{{ $label }}</option>
+            @endforeach
+        </select>
+
+        <select class="form-select form-select-sm w-auto" x-model="bulk.priority" x-show="bulk.action === 'priority'" aria-label="{{ __('Priority') }}">
+            @foreach (\App\Enums\IssuePriority::labels() as $value => $label)
+                <option value="{{ $value }}">{{ $label }}</option>
+            @endforeach
+        </select>
+
+        <select class="form-select form-select-sm w-auto" x-model="bulk.assigned_to" x-show="bulk.action === 'assignee'" aria-label="{{ __('Assignee') }}">
+            <option value="">{{ __('Unassigned') }}</option>
+            @foreach ($assignees as $id => $name)
+                <option value="{{ $id }}">{{ $name }}</option>
+            @endforeach
+        </select>
+
+        <button type="button" class="btn btn-primary btn-sm" x-on:click="applyBulk()">{{ __('Apply') }}</button>
+        <button type="button" class="btn btn-link btn-sm" x-on:click="selected = []">{{ __('Clear selection') }}</button>
+    </div>
+@endif
+
 <x-listpage-table>
     <table class="table table-hover align-middle onit-table">
         <thead>
             <tr>
+                @if ($canBulk)
+                    <th style="width: 1%">
+                        <input type="checkbox" class="form-check-input" aria-label="{{ __('Select all on this page') }}" x-bind:checked="data.data.length > 0 && selected.length === data.data.length" x-on:change="selected = $event.target.checked ? data.data.map((issue) => issue.id) : []" />
+                    </th>
+                @endif
                 <th style="width: 9%"><x-listpage-sorter column="id" :label="__('Key')" /></th>
                 <th style="width: 29%"><x-listpage-sorter column="title" :label="__('Title')" /></th>
                 <th style="width: 9%">{{ __('System') }}</th>
@@ -83,6 +125,11 @@
         <tbody>
             <template x-for="(issue, index) in data.data" x-bind:key="issue.id">
                 <tr role="button" x-on:click="open(issue)">
+                    @if ($canBulk)
+                        <td x-on:click.stop>
+                            <input type="checkbox" class="form-check-input" x-bind:value="issue.id" x-model.number="selected" x-bind:aria-label="__('Select :key', { key: issue.key })" />
+                        </td>
+                    @endif
                     <td class="issue-key" x-text="issue.key"></td>
                     <td class="text-break"><a class="issue-title" x-bind:href="zroute('user.issues.show', issue.key)" x-on:click.stop x-text="issue.title"></a></td>
                     <td x-text="IssueSystem.labels[issue.system] ?? '-'"></td>
@@ -101,7 +148,7 @@
                 </tr>
             </template>
             <tr x-show="data.data.length === 0" x-cloak>
-                <td colspan="8" class="text-center text-muted py-5">{{ __('No issues found.') }}</td>
+                <td colspan="{{ $canBulk ? 9 : 8 }}" class="text-center text-muted py-5">{{ __('No issues found.') }}</td>
             </tr>
         </tbody>
     </table>
