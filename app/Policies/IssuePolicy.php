@@ -4,6 +4,7 @@ namespace App\Policies;
 
 use App\Enums\IssueStatus;
 use App\Models\Issue;
+use App\Models\IssueComment;
 use App\Models\User;
 
 class IssuePolicy
@@ -62,5 +63,21 @@ class IssuePolicy
     public function comment(User $user, Issue $issue): bool
     {
         return true;
+    }
+
+    /**
+     * Determine whether the user can edit the comment.
+     */
+    public function updateComment(User $user, Issue $issue, IssueComment $comment): bool
+    {
+        return $user->id === $comment->user_id;
+    }
+
+    /**
+     * Determine whether the user can delete the comment.
+     */
+    public function deleteComment(User $user, Issue $issue, IssueComment $comment): bool
+    {
+        return $user->id === $comment->user_id;
     }
 }
