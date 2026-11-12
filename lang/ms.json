@@ -410,5 +410,11 @@
     "Clear selection": "Kosongkan pilihan",
     "Select all on this page": "Pilih semua di halaman ini",
     "Select :key": "Pilih :key",
-    "Skipped": "Dilangkau"
+    "Skipped": "Dilangkau",
+    "Board": "Papan",
+    "Issue :key moved to :status.": "Isu :key dipindahkan ke :status.",
+    "Drag a card to another column to change its status.": "Seret kad ke lajur lain untuk menukar statusnya.",
+    "Showing :shown of :total": "Menunjukkan :shown daripada :total",
+    "No issues": "Tiada isu",
+    "Issues by status. Archived issues are hidden.": "Isu mengikut status. Isu yang diarkibkan disembunyikan."
 }

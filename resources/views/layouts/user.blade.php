@@ -16,6 +16,7 @@
         <nav class="onit-nav" aria-label="{{ __('Main navigation') }}">
             <a @class(['onit-nav-link', 'active' => request()->routeIs('user.main', 'user.issues.index', 'user.issues.show')]) href="{{ route('user.main') }}">{{ __('Dashboard') }}</a>
             <a @class(['onit-nav-link', 'active' => request()->routeIs('user.my_issues')]) href="{{ route('user.my_issues') }}">{{ __('My Issues') }}</a>
+            <a @class(['onit-nav-link', 'active' => request()->routeIs('user.board')]) href="{{ route('user.board') }}">{{ __('Board') }}</a>
             @can('create', \App\Models\Issue::class)
                 <a @class(['onit-nav-link', 'active' => request()->routeIs('user.issues.create')]) href="{{ route('user.issues.create') }}">{{ __('Create Issue') }}</a>
             @endcan
