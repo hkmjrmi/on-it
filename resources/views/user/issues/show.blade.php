@@ -131,7 +131,7 @@
                         @endforelse
 
                         @can('comment', $issue)
-                            <x-form x-data="CommentForm()" :action="route('user.issues.comments.store', $issue)">
+                            <x-form x-data="CommentForm()" is-post :action="route('user.issues.comments.store', $issue)">
                                 <x-textarea name="body" rows="3" :placeholder="__('Write a comment...')" autosize />
                                 <x-error for="body" />
 

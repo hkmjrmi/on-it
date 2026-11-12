@@ -14,7 +14,7 @@
         <div class="col-lg-8 col-xl-9" style="max-width: 820px">
             <div class="card">
                 <div class="card-body">
-                    <x-form x-data="Form()" has-files :action="route('user.issues.store')" :bind-data="$issue">
+                    <x-form x-data="Form()" is-post has-files :action="route('user.issues.store')" :bind-data="$issue">
                         <div class="mb-3">
                             <x-label for="title" required>{{ __('Title') }}</x-label>
                             <x-input type="text" name="title" placeholder="{{ __('Short summary of the problem') }}" autofill />
