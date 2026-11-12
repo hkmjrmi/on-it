@@ -96,6 +96,21 @@ class IssueController extends Controller
     }
 
     /**
+     * Remove the specified issue from storage.
+     */
+    public function destroy(Issue $issue)
+    {
+        Gate::authorize('delete', $issue);
+
+        $issue->delete();
+
+        return response()->json([
+            'message' => __('Issue :key has been deleted successfully.', ['key' => $issue->key]),
+            'redirect' => route('user.main'),
+        ]);
+    }
+
+    /**
      * Get the filtered, searched and sorted query for the issue list.
      */
     protected function listQuery(Request $request): Builder

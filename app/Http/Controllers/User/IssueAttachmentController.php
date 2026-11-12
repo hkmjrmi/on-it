@@ -13,6 +13,8 @@ class IssueAttachmentController extends Controller
      */
     public function __invoke(IssueAttachment $attachment)
     {
+        abort_unless($attachment->issue, 404);
+
         Gate::authorize('view', $attachment->issue);
 
         return storage($attachment->disk)->response($attachment->path, $attachment->original_name, [
