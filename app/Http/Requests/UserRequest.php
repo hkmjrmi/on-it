@@ -37,14 +37,6 @@ class UserRequest extends FormRequest
             $rules['role'] = ['required', 'enum:' . UserRole::class];
         }
 
-        if ($this->conditions->user === null) {
-            $rules['password'][] = 'confirmed';
-
-            if (config('services.hcaptcha.sitekey')) {
-                $rules['captcha'] = ['required', 'hcaptcha'];
-            }
-        }
-
         return $rules;
     }
 

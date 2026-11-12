@@ -68,7 +68,9 @@ class UserController extends Controller
      */
     public function store(UserRequest $request)
     {
-        $user = User::create($request->validated());
+        $user = new User($request->validated());
+        $user->email_verified_at = now();
+        $user->save();
 
         return redirect(route('admin.users.index'))
             ->with('item_id', $user->id)
