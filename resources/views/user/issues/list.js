@@ -25,6 +25,42 @@ Alpine.data('ListPage', () =>
 
         savedFilters: PageData.savedFilters ?? [],
 
+        selected: [],
+
+        bulk: { action: 'status', status: 'in_development', priority: 'medium', assigned_to: '' },
+
+        applyBulk() {
+            const field = { status: 'status', priority: 'priority', assignee: 'assigned_to' }[this.bulk.action];
+            const payload = { ids: this.selected, action: this.bulk.action };
+
+            if (field) {
+                payload[field] = this.bulk[field] === '' ? null : this.bulk[field];
+            }
+
+            Helper.showPageSpinner();
+
+            axios
+                .post(zroute('user.issues.bulk'), payload)
+                .then((response) => {
+                    const { message, skipped } = response.data;
+
+                    if (skipped.length > 0) {
+                        const details = skipped.map((item) => eh(item.key) + ': ' + eh(item.reason)).join('<br>');
+                        Helper.showNotificationWarning(eh(message) + '<br>' + __('Skipped') + ':<br>' + details, 8000);
+                    } else {
+                        Helper.showNotificationSuccess(message);
+                    }
+
+                    this.selected = [];
+                    this.load(this.url, Object.assign({}, this.params, { _ajax: 1 }));
+                })
+                .catch((error) => {
+                    const errors = error.response?.data?.errors;
+                    Helper.showNotificationError(errors ? Object.values(errors)[0][0] : error.response?.data?.message);
+                })
+                .then(() => Helper.removePageSpinner());
+        },
+
         applyFilter(filter) {
             const { tab, ...defaults } = this.defaultParams;
             Object.assign(this.params, defaults, filter.params, { page: 1 });

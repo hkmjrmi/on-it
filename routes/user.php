@@ -54,6 +54,7 @@ Route::middleware([
 
     // Issues
     Route::get('my-issues', [User\IssueController::class, 'mine'])->name('my_issues');
+    Route::post('issues/bulk', User\IssueBulkController::class)->name('issues.bulk');
     Route::resource('issues', User\IssueController::class)->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
     Route::post('issues/{issue}/comments', [User\IssueCommentController::class, 'store'])->name('issues.comments.store');
     Route::patch('issues/{issue}/comments/{comment}', [User\IssueCommentController::class, 'update'])->scopeBindings()->name('issues.comments.update');
