@@ -58,6 +58,8 @@ Route::middleware([
     Route::post('issues/{issue}/comments', [User\IssueCommentController::class, 'store'])->name('issues.comments.store');
     Route::patch('issues/{issue}/comments/{comment}', [User\IssueCommentController::class, 'update'])->scopeBindings()->name('issues.comments.update');
     Route::delete('issues/{issue}/comments/{comment}', [User\IssueCommentController::class, 'destroy'])->scopeBindings()->name('issues.comments.destroy');
+    Route::post('issues/{issue}/archive', [User\IssueArchiveController::class, 'store'])->name('issues.archive');
+    Route::delete('issues/{issue}/archive', [User\IssueArchiveController::class, 'destroy'])->name('issues.unarchive');
     Route::patch('issues/{issue}/workflow', User\IssueWorkflowController::class)->name('issues.workflow');
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 

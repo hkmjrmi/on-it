@@ -58,6 +58,22 @@ class IssuePolicy
     }
 
     /**
+     * Determine whether the user can archive the issue.
+     */
+    public function archive(User $user, Issue $issue): bool
+    {
+        return $user->isProgrammer() && !$issue->isArchived() && $issue->status->in(IssueStatus::closed());
+    }
+
+    /**
+     * Determine whether the user can unarchive the issue.
+     */
+    public function unarchive(User $user, Issue $issue): bool
+    {
+        return $user->isProgrammer() && $issue->isArchived();
+    }
+
+    /**
      * Determine whether the user can comment on the issue.
      */
     public function comment(User $user, Issue $issue): bool

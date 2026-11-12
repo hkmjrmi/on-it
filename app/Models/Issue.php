@@ -45,6 +45,7 @@ class Issue extends Model
         'created_by',
         'assigned_to',
         'released_at',
+        'archived_at',
     ];
 
     /**
@@ -61,6 +62,7 @@ class Issue extends Model
             'status' => IssueStatus::class,
             'source' => IssueSource::class,
             'released_at' => 'datetime',
+            'archived_at' => 'datetime',
         ];
     }
 
@@ -120,6 +122,22 @@ class Issue extends Model
         if ($status) {
             $query->where('status', $status);
         }
+    }
+
+    /**
+     * Scope a query to only include archived issues, or only unarchived issues.
+     */
+    public function scopeArchived(Builder $query, bool $archived = true): void
+    {
+        $archived ? $query->whereNotNull('archived_at') : $query->whereNull('archived_at');
+    }
+
+    /**
+     * Determine if the issue is archived.
+     */
+    public function isArchived(): bool
+    {
+        return $this->archived_at !== null;
     }
 
     /**
