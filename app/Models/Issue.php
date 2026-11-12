@@ -168,6 +168,22 @@ class Issue extends Model
     }
 
     /**
+     * Order a query by an enum column following the declared order of its cases.
+     *
+     * @param  array<int, \BackedEnum>  $cases
+     */
+    public function scopeOrderByEnum(Builder $query, string $column, array $cases, \SortDirection|string $direction = 'asc'): void
+    {
+        $direction = $direction === \SortDirection::Descending || $direction === 'desc' ? 'desc' : 'asc';
+        $whens = implode(' ', array_map(fn (int $index) => "when ? then {$index}", array_keys($cases)));
+
+        $query->orderByRaw(
+            "case {$query->qualifyColumn($column)} {$whens} end {$direction}",
+            array_map(fn (\BackedEnum $case) => $case->value, $cases),
+        );
+    }
+
+    /**
      * Scope a query to only include issues assigned to the given user, or unassigned issues.
      */
     public function scopeAssignee(Builder $query, string|null $assignee): void

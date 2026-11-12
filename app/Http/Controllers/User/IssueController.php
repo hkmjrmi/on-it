@@ -107,7 +107,13 @@ class IssueController extends Controller
             ->when($request->boolean('open'), fn (Builder $query) => $query->open())
             ->when($request->boolean('released_this_week'), fn (Builder $query) => $query->releasedThisWeek())
             ->searchWildcard($request->query('search_value'), ['title', 'key', 'merchant_name'])
-            ->resolveSortString($request->query('sort'), 'id', 'desc', ['id', 'title', 'priority', 'status', 'created_at']);
+            ->resolveSortString($request->query('sort'), 'id', 'desc', [
+                'id',
+                'title',
+                'priority' => fn (Builder $query, $direction) => $query->orderByEnum('priority', IssuePriority::cases(), $direction),
+                'status' => fn (Builder $query, $direction) => $query->orderByEnum('status', IssueStatus::cases(), $direction),
+                'created_at',
+            ]);
     }
 
     /**
@@ -168,12 +174,10 @@ class IssueController extends Controller
      */
     protected function spotlight(): EloquentCollection
     {
-        $priorityOrder = collect(IssuePriority::cases())->reverse()->values()->map(fn (IssuePriority $priority) => $priority->value);
-
         return Issue::query()
             ->open()
             ->with(['creator:id,name,role', 'assignee:id,name,role'])
-            ->orderByRaw('case priority ' . $priorityOrder->map(fn ($value, $index) => "when '{$value}' then {$index}")->implode(' ') . ' end')
+            ->orderByEnum('priority', IssuePriority::cases(), 'desc')
             ->latest('id')
             ->limit(3)
             ->get();
