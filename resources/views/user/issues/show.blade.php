@@ -40,6 +40,13 @@
                     </button>
                 @endcan
 
+                @can('create', \App\Models\Issue::class)
+                    <a class="btn btn-outline text-nowrap" href="{{ route('user.issues.create', ['clone' => $issue->key]) }}">
+                        <span class="far fa-copy me-1" aria-hidden="true"></span>
+                        {{ __('Clone') }}
+                    </a>
+                @endcan
+
                 @can('delete', $issue)
                     <button type="button" class="btn btn-outline-danger text-nowrap" x-on:click="remove()">
                         <span class="far fa-trash-alt me-1" aria-hidden="true"></span>

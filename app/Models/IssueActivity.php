@@ -65,7 +65,9 @@ class IssueActivity extends Model
         $name = $this->user->name;
 
         return match ($this->action) {
-            IssueActivityAction::Created => __(':name created the issue', ['name' => $name]),
+            IssueActivityAction::Created => $this->from_value
+                ? __(':name created the issue (cloned from :key)', ['name' => $name, 'key' => $this->from_value])
+                : __(':name created the issue', ['name' => $name]),
             IssueActivityAction::Edited => __(':name edited the title and description', ['name' => $name]),
             IssueActivityAction::Commented => __(':name commented', ['name' => $name]),
             IssueActivityAction::CommentEdited => __(':name edited a comment', ['name' => $name]),
