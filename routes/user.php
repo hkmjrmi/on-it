@@ -22,10 +22,6 @@ Route::middleware('guest:user')->group(function () {
     // Reset password
     Route::get('reset-password/{token}', [Auth\NewPasswordController::class, 'create'])->name('password.reset');
     Route::post('reset-password', [Auth\NewPasswordController::class, 'store'])->name('password.update');
-
-    // Register
-    Route::get('register', [Auth\RegisteredUserController::class, 'create'])->name('register');
-    Route::post('register', [Auth\RegisteredUserController::class, 'storeUser']);
 });
 
 Route::middleware(['auth:user', SetUserLocale::class])->group(function () {
