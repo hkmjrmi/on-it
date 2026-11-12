@@ -6,7 +6,11 @@
     <div class="onit-page-header">
         <div>
             <h1>@yield('title')</h1>
-            <p>{{ __('Log a customer complaint, suggestion or bug') }}</p>
+            @if ($source)
+                <p>{!! __('Cloned from :key. Comments, attachments, status and assignee are not copied.', ['key' => '<a href="' . e(route('user.issues.show', $source)) . '">' . e($source->key) . '</a>']) !!}</p>
+            @else
+                <p>{{ __('Log a customer complaint, suggestion or bug') }}</p>
+            @endif
         </div>
     </div>
 
@@ -15,6 +19,10 @@
             <div class="card">
                 <div class="card-body">
                     <x-form x-data="Form()" is-post has-files :action="route('user.issues.store')" :bind-data="$issue">
+                        @if ($source)
+                            <input type="hidden" name="cloned_from" value="{{ $source->key }}" />
+                        @endif
+
                         <div class="mb-3">
                             <x-label for="title" required>{{ __('Title') }}</x-label>
                             <x-input type="text" name="title" placeholder="{{ __('Short summary of the problem') }}" autofill />

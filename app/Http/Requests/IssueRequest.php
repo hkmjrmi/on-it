@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;
+use Illuminate\Validation\Rule;
 use Onpay\Core\Http\FormRequest;
 
 class IssueRequest extends FormRequest
@@ -37,6 +38,7 @@ class IssueRequest extends FormRequest
                 'merchant_name' => ['nullable', 'string', 'max:255'],
                 'attachments' => ['nullable', 'array', 'max:5'],
                 'attachments.*' => ['file', 'mimes:jpg,jpeg,png,gif,webp,pdf', 'max:5120'],
+                'cloned_from' => ['nullable', 'string', Rule::exists('issues', 'key')->withoutTrashed()],
             ];
         }
 

@@ -22,6 +22,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Str;
 
 class IssueController extends Controller
 {
@@ -203,13 +204,22 @@ class IssueController extends Controller
     /**
      * Show the form for creating a new issue.
      */
-    public function create()
+    public function create(Request $request)
     {
         Gate::authorize('create', Issue::class);
 
-        return view('user.issues.form', [
-            'issue' => ['priority' => IssuePriority::Medium->value],
-        ]);
+        $source = $request->filled('clone')
+            ? Issue::query()->where('key', $request->query('clone'))->first()
+            : null;
+
+        $issue = $source
+            ? [
+                ...array_map(fn ($value) => $value instanceof \BackedEnum ? $value->value : $value, $source->only(['description', 'type', 'system', 'priority', 'merchant_name'])),
+                'title' => Str::limit(__('Copy of :title', ['title' => $source->title]), 255, ''),
+            ]
+            : ['priority' => IssuePriority::Medium->value];
+
+        return view('user.issues.form', compact('issue', 'source'));
     }
 
     /**
@@ -223,7 +233,7 @@ class IssueController extends Controller
 
         $issue = DB::transaction(function () use ($request, $user) {
             $issue = Issue::create([
-                ...$request->safe()->except('attachments'),
+                ...$request->safe()->except(['attachments', 'cloned_from']),
                 'source' => IssueSource::fromRole($user->role),
                 'status' => IssueStatus::New,
                 'created_by' => $user->id,
@@ -232,6 +242,7 @@ class IssueController extends Controller
             $issue->activities()->create([
                 'user_id' => $user->id,
                 'action' => IssueActivityAction::Created,
+                'from_value' => $request->validated('cloned_from'),
             ]);
 
             $disk = config('filesystems.attachments');
