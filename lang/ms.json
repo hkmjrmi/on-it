@@ -372,5 +372,16 @@
     "Archive": "Arkib",
     "Unarchive": "Keluarkan daripada Arkib",
     "Archived issues only": "Isu diarkibkan sahaja",
-    "This issue is archived and hidden from the dashboard and issue lists.": "Isu ini diarkibkan dan disembunyikan daripada papan pemuka dan senarai isu."
+    "This issue is archived and hidden from the dashboard and issue lists.": "Isu ini diarkibkan dan disembunyikan daripada papan pemuka dan senarai isu.",
+    "Notifications": "Pemberitahuan",
+    "Updates on issues you reported, are assigned to, or commented on": "Kemas kini isu yang anda laporkan, ditugaskan kepada anda, atau anda ulas",
+    "Mark all as read": "Tandakan semua sebagai dibaca",
+    "No notifications yet.": "Tiada pemberitahuan lagi.",
+    "View all notifications": "Lihat semua pemberitahuan",
+    "This issue has been deleted.": "Isu ini telah dipadam.",
+    "All notifications have been marked as read.": "Semua pemberitahuan telah ditandakan sebagai dibaca.",
+    ":name assigned :key to you": ":name menugaskan :key kepada anda",
+    ":name reported :key": ":name melaporkan :key",
+    ":name commented on :key": ":name mengulas pada :key",
+    ":name changed :key from :from to :to": ":name menukar :key daripada :from kepada :to"
 }

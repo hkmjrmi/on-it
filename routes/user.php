@@ -63,6 +63,11 @@ Route::middleware([
     Route::patch('issues/{issue}/workflow', User\IssueWorkflowController::class)->name('issues.workflow');
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 
+    // Notifications
+    Route::get('notifications', [User\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('notifications/read-all', [User\NotificationController::class, 'readAll'])->name('notifications.read_all');
+    Route::get('notifications/{notification}', [User\NotificationController::class, 'show'])->name('notifications.show');
+
     // Profile
     Route::name('profile.')->prefix('profile')->group(function () {
         Route::singleton('user', Profile\UserController::class);

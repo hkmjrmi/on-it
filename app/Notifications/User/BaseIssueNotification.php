@@ -30,7 +30,7 @@ abstract class BaseIssueNotification extends Notification implements ShouldQueue
      */
     public function via(User $user): array
     {
-        return ['mail'];
+        return ['mail', 'database'];
     }
 
     /**
@@ -46,6 +46,38 @@ abstract class BaseIssueNotification extends Notification implements ShouldQueue
             ->action(__('View Issue'), route('user.issues.show', $this->issue))
             ->salutation(config('app.name'));
     }
+
+    /**
+     * Get the array representation of the notification for the database channel.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(User $user): array
+    {
+        return [
+            'issue_key' => $this->issue->key,
+            'issue_title' => $this->issue->title,
+            'actor_name' => $this->actor->name,
+            ...$this->extraData(),
+        ];
+    }
+
+    /**
+     * Get the notification-specific data stored with the database notification.
+     *
+     * @return array<string, mixed>
+     */
+    protected function extraData(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get the readable in-app message from the stored notification data.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    abstract public static function message(array $data): string;
 
     /**
      * Get the subject of the mail, without the issue key.

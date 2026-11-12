@@ -22,6 +22,28 @@ class IssueCommentedNotification extends BaseIssueNotification
     }
 
     /**
+     * Get the notification-specific data stored with the database notification.
+     *
+     * @return array<string, mixed>
+     */
+    protected function extraData(): array
+    {
+        return [
+            'comment_excerpt' => Str::limit(preg_replace('/\s+/', ' ', $this->comment->body), 120),
+        ];
+    }
+
+    /**
+     * Get the readable in-app message from the stored notification data.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public static function message(array $data): string
+    {
+        return __(':name commented on :key', ['name' => $data['actor_name'], 'key' => $data['issue_key']]);
+    }
+
+    /**
      * Get the subject of the mail, without the issue key.
      */
     protected function subject(): string

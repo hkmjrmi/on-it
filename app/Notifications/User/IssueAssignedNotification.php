@@ -7,6 +7,16 @@ use Illuminate\Notifications\Messages\MailMessage;
 class IssueAssignedNotification extends BaseIssueNotification
 {
     /**
+     * Get the readable in-app message from the stored notification data.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public static function message(array $data): string
+    {
+        return __(':name assigned :key to you', ['name' => $data['actor_name'], 'key' => $data['issue_key']]);
+    }
+
+    /**
      * Get the subject of the mail, without the issue key.
      */
     protected function subject(): string
