@@ -21,6 +21,34 @@ class IssueStatusChangedNotification extends BaseIssueNotification
     }
 
     /**
+     * Get the notification-specific data stored with the database notification.
+     *
+     * @return array<string, mixed>
+     */
+    protected function extraData(): array
+    {
+        return [
+            'from' => $this->from->value,
+            'to' => $this->issue->status->value,
+        ];
+    }
+
+    /**
+     * Get the readable in-app message from the stored notification data.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public static function message(array $data): string
+    {
+        return __(':name changed :key from :from to :to', [
+            'name' => $data['actor_name'],
+            'key' => $data['issue_key'],
+            'from' => IssueStatus::tryFrom($data['from'] ?? '')?->label() ?? '-',
+            'to' => IssueStatus::tryFrom($data['to'] ?? '')?->label() ?? '-',
+        ]);
+    }
+
+    /**
      * Get the subject of the mail, without the issue key.
      */
     protected function subject(): string
