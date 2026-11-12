@@ -63,6 +63,11 @@ Route::middleware([
     Route::patch('issues/{issue}/workflow', User\IssueWorkflowController::class)->name('issues.workflow');
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 
+    // Saved filters
+    Route::post('saved-filters', [User\SavedFilterController::class, 'store'])->name('saved_filters.store');
+    Route::patch('saved-filters/{savedFilter}', [User\SavedFilterController::class, 'update'])->name('saved_filters.update');
+    Route::delete('saved-filters/{savedFilter}', [User\SavedFilterController::class, 'destroy'])->name('saved_filters.destroy');
+
     // Notifications
     Route::get('notifications', [User\NotificationController::class, 'index'])->name('notifications.index');
     Route::post('notifications/read-all', [User\NotificationController::class, 'readAll'])->name('notifications.read_all');

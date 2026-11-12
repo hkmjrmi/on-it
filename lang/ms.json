@@ -383,5 +383,18 @@
     ":name assigned :key to you": ":name menugaskan :key kepada anda",
     ":name reported :key": ":name melaporkan :key",
     ":name commented on :key": ":name mengulas pada :key",
-    ":name changed :key from :from to :to": ":name menukar :key daripada :from kepada :to"
+    ":name changed :key from :from to :to": ":name menukar :key daripada :from kepada :to",
+    "You already have a saved filter with this name.": "Anda sudah mempunyai penapis tersimpan dengan nama ini.",
+    "Filter has been saved.": "Penapis telah disimpan.",
+    "Filter has been renamed.": "Penapis telah dinamakan semula.",
+    "Filter has been deleted.": "Penapis telah dipadam.",
+    "Saved filters": "Penapis tersimpan",
+    "No saved filters yet.": "Tiada penapis tersimpan lagi.",
+    "Save current filters": "Simpan penapis semasa",
+    "Save Filter": "Simpan Penapis",
+    "Rename Filter": "Namakan Semula Penapis",
+    "Rename": "Namakan semula",
+    "Filter name": "Nama penapis",
+    "e.g. My urgent OnPay bugs": "cth. Pepijat OnPay segera saya",
+    "Do you want to delete this saved filter?": "Adakah anda mahu memadam penapis tersimpan ini?"
 }
