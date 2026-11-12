@@ -349,5 +349,14 @@
     "Issue :key has been deleted successfully.": "Isu :key telah berjaya dipadam.",
     "Do you want to delete this issue?": "Adakah anda mahu memadam isu ini?",
     "This cannot be undone.": "Tindakan ini tidak boleh dibatalkan.",
-    "Delete": "Padam"
+    "Delete": "Padam",
+    "Comment Edited": "Komen Disunting",
+    "Comment Deleted": "Komen Dipadam",
+    ":name edited a comment": ":name menyunting komen",
+    ":name deleted a comment": ":name memadam komen",
+    "Your comment has been updated.": "Komen anda telah dikemaskini.",
+    "Your comment has been deleted.": "Komen anda telah dipadam.",
+    "Edit Comment": "Sunting Komen",
+    "Do you want to delete this comment?": "Adakah anda mahu memadam komen ini?",
+    "edited": "disunting"
 }

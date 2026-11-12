@@ -6,8 +6,10 @@ use App\Enums\IssueActivityAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IssueCommentRequest;
 use App\Models\Issue;
+use App\Models\IssueComment;
 use App\Models\User;
 use App\Notifications\User\IssueCommentedNotification;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
@@ -50,5 +52,51 @@ class IssueCommentController extends Controller
 
         return redirect(route('user.issues.show', $issue) . '#comments')
             ->withSuccessNotification(__('Your comment has been added.'));
+    }
+
+    /**
+     * Update the specified comment.
+     */
+    public function update(IssueCommentRequest $request, Issue $issue, IssueComment $comment)
+    {
+        Gate::authorize('updateComment', [$issue, $comment]);
+
+        $comment->body = $request->validated('body');
+
+        if ($comment->isDirty()) {
+            DB::transaction(function () use ($request, $issue, $comment) {
+                $comment->save();
+
+                $issue->activities()->create([
+                    'user_id' => $request->user()->id,
+                    'action' => IssueActivityAction::CommentEdited,
+                ]);
+            });
+        }
+
+        return response()->json([
+            'message' => __('Your comment has been updated.'),
+        ]);
+    }
+
+    /**
+     * Remove the specified comment.
+     */
+    public function destroy(Request $request, Issue $issue, IssueComment $comment)
+    {
+        Gate::authorize('deleteComment', [$issue, $comment]);
+
+        DB::transaction(function () use ($request, $issue, $comment) {
+            $comment->delete();
+
+            $issue->activities()->create([
+                'user_id' => $request->user()->id,
+                'action' => IssueActivityAction::CommentDeleted,
+            ]);
+        });
+
+        return response()->json([
+            'message' => __('Your comment has been deleted.'),
+        ]);
     }
 }

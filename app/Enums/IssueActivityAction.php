@@ -16,6 +16,8 @@ enum IssueActivityAction: string
     case StatusChanged = 'status_changed';
     case PriorityChanged = 'priority_changed';
     case Commented = 'commented';
+    case CommentEdited = 'comment_edited';
+    case CommentDeleted = 'comment_deleted';
 
     /**
      * Get the label for the case.
@@ -29,6 +31,8 @@ enum IssueActivityAction: string
             self::StatusChanged => __('Status Changed'),
             self::PriorityChanged => __('Priority Changed'),
             self::Commented => __('Commented'),
+            self::CommentEdited => __('Comment Edited'),
+            self::CommentDeleted => __('Comment Deleted'),
         };
     }
 

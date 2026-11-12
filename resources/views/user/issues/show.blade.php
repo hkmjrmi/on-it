@@ -131,6 +131,26 @@
                                         <strong>{{ $comment->user->name }}</strong>
                                         <span class="role-label">{{ $comment->user->role->label() }}</span>
                                         <time datetime="{{ $comment->created_at->toIso8601String() }}" title="{{ $comment->created_at }}">{{ $comment->created_at->diffForHumans() }}</time>
+
+                                        @if ($comment->updated_at->gt($comment->created_at))
+                                            <span class="text-muted small" title="{{ $comment->updated_at }}">({{ __('edited') }})</span>
+                                        @endif
+
+                                        @if (auth()->user()->can('updateComment', [$issue, $comment]) || auth()->user()->can('deleteComment', [$issue, $comment]))
+                                            <span class="float-end">
+                                                @can('updateComment', [$issue, $comment])
+                                                    <button type="button" class="btn btn-link btn-sm p-0 text-muted" x-on:click="editComment(@js(['id' => $comment->id, 'body' => $comment->body]))" title="{{ __('Edit') }}" aria-label="{{ __('Edit') }}">
+                                                        <span class="far fa-edit" aria-hidden="true"></span>
+                                                    </button>
+                                                @endcan
+
+                                                @can('deleteComment', [$issue, $comment])
+                                                    <button type="button" class="btn btn-link btn-sm p-0 ms-2 text-danger" x-on:click="removeComment({{ $comment->id }})" title="{{ __('Delete') }}" aria-label="{{ __('Delete') }}">
+                                                        <span class="far fa-trash-alt" aria-hidden="true"></span>
+                                                    </button>
+                                                @endcan
+                                            </span>
+                                        @endif
                                     </div>
                                     <div class="text-break" style="white-space: pre-line; line-height: 1.5">{{ $comment->body }}</div>
                                 </div>
@@ -293,9 +313,17 @@
             @can('update', $issue)
                 editFormRequest: {!! \App\Http\Requests\IssueRequest::extractJson(['method' => 'PATCH']) !!},
             @endcan
+            commentFormRequest: {!! \App\Http\Requests\IssueCommentRequest::extractJson() !!},
         });
     </script>
     <script type="text/javascript" src="{{ asset('views/user/issues/show.js') }}"></script>
+@endpush
+
+@push('templates')
+    <template id="comment_edit_modal">
+        <x-textarea name="body" rows="5" x-model="data.body" autosize />
+        <x-error for="body" />
+    </template>
 @endpush
 
 @can('update', $issue)

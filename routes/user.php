@@ -56,6 +56,8 @@ Route::middleware([
     Route::get('my-issues', [User\IssueController::class, 'mine'])->name('my_issues');
     Route::resource('issues', User\IssueController::class)->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
     Route::post('issues/{issue}/comments', [User\IssueCommentController::class, 'store'])->name('issues.comments.store');
+    Route::patch('issues/{issue}/comments/{comment}', [User\IssueCommentController::class, 'update'])->scopeBindings()->name('issues.comments.update');
+    Route::delete('issues/{issue}/comments/{comment}', [User\IssueCommentController::class, 'destroy'])->scopeBindings()->name('issues.comments.destroy');
     Route::patch('issues/{issue}/workflow', User\IssueWorkflowController::class)->name('issues.workflow');
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 
