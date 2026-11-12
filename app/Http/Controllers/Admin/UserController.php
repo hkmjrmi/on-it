@@ -5,6 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\UserStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
+use App\Models\Issue;
+use App\Models\IssueActivity;
+use App\Models\IssueAttachment;
+use App\Models\IssueComment;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -139,6 +143,13 @@ class UserController extends Controller
      */
     public function destroy(Request $request, User $user)
     {
+        $hasIssueHistory = Issue::query()->where('created_by', $user->id)->exists()
+            || IssueComment::query()->where('user_id', $user->id)->exists()
+            || IssueAttachment::query()->where('user_id', $user->id)->exists()
+            || IssueActivity::query()->where('user_id', $user->id)->exists();
+
+        abort_if($hasIssueHistory, 422, __('This user has issue history and cannot be deleted. Ban the user instead.'));
+
         $user->delete();
 
         return $this->index($request);
