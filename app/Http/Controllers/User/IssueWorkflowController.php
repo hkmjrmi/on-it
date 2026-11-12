@@ -7,6 +7,9 @@ use App\Enums\IssueStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IssueWorkflowRequest;
 use App\Models\Issue;
+use App\Models\User;
+use App\Notifications\User\IssueAssignedNotification;
+use App\Notifications\User\IssueStatusChangedNotification;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
@@ -41,10 +44,25 @@ class IssueWorkflowController extends Controller
             ])
             ->values();
 
+        $user = $request->user();
+        $statusChanged = $issue->isDirty('status');
+        $previousStatus = IssueStatus::from($issue->getRawOriginal('status'));
+        $newAssigneeId = $issue->isDirty('assigned_to') ? $issue->assigned_to : null;
+
         DB::transaction(function () use ($issue, $activities) {
             $issue->save();
             $issue->activities()->createMany($activities);
         });
+
+        if ($statusChanged && $issue->created_by !== $user->id) {
+            User::query()->receivesNotifications()->whereKey($issue->created_by)->first()
+                ?->notify(new IssueStatusChangedNotification($issue, $user, $previousStatus));
+        }
+
+        if ($newAssigneeId && $newAssigneeId !== $user->id) {
+            User::query()->receivesNotifications()->whereKey($newAssigneeId)->first()
+                ?->notify(new IssueAssignedNotification($issue, $user));
+        }
 
         return back()->withSuccessNotification(__('Issue :key has been updated successfully.', ['key' => $issue->key]));
     }

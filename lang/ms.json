@@ -329,5 +329,21 @@
     "Your comment has been added.": "Ulasan anda telah ditambah.",
     "{1} <strong>:count issue</strong> has no assignee yet|[2,*] <strong>:count issues</strong> have no assignee yet": "<strong>:count isu</strong> belum ditugaskan kepada sesiapa",
     "{1} <strong>:count issue</strong> is approved and waiting for the next release|[2,*] <strong>:count issues</strong> are approved and waiting for the next release": "<strong>:count isu</strong> telah diluluskan dan menunggu pelancaran seterusnya",
-    "{1} <strong>:count issue</strong> needs more details from CGE before work can continue|[2,*] <strong>:count issues</strong> need more details from CGE before work can continue": "<strong>:count isu</strong> memerlukan butiran lanjut daripada CGE sebelum kerja boleh diteruskan"
+    "{1} <strong>:count issue</strong> needs more details from CGE before work can continue|[2,*] <strong>:count issues</strong> need more details from CGE before work can continue": "<strong>:count isu</strong> memerlukan butiran lanjut daripada CGE sebelum kerja boleh diteruskan",
+    "Hi :name,": "Hai :name,",
+    "View Issue": "Lihat Isu",
+    "New issue: :title": "Isu baharu: :title",
+    ":name reported a new issue.": ":name telah melaporkan isu baharu.",
+    "Priority: :priority": "Keutamaan: :priority",
+    "System: :system": "Sistem: :system",
+    "Merchant: :merchant": "Peniaga: :merchant",
+    "Assigned to you: :title": "Ditugaskan kepada anda: :title",
+    ":name assigned an issue to you.": ":name telah menugaskan satu isu kepada anda.",
+    "Status: :status": "Status: :status",
+    "Status changed to :status": "Status ditukar kepada :status",
+    ":name changed the status of **:title** from :from to :to.": ":name telah menukar status **:title** daripada :from kepada :to.",
+    "What to do next: :message": "Apa yang perlu dilakukan seterusnya: :message",
+    "What you can tell the customer: \":message\"": "Apa yang anda boleh beritahu pelanggan: \":message\"",
+    "New comment on :title": "Komen baharu pada :title",
+    ":name commented on **:title**:": ":name telah mengulas pada **:title**:"
 }
