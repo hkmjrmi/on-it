@@ -416,5 +416,17 @@
     "Drag a card to another column to change its status.": "Seret kad ke lajur lain untuk menukar statusnya.",
     "Showing :shown of :total": "Menunjukkan :shown daripada :total",
     "No issues": "Tiada isu",
-    "Issues by status. Archived issues are hidden.": "Isu mengikut status. Isu yang diarkibkan disembunyikan."
+    "Issues by status. Archived issues are hidden.": "Isu mengikut status. Isu yang diarkibkan disembunyikan.",
+    "Reports": "Laporan",
+    "How issues are flowing, week by week": "Aliran isu, minggu demi minggu",
+    "Range": "Julat",
+    "Last :count weeks": ":count minggu lepas",
+    "Resolved": "Diselesaikan",
+    "Avg. days to release": "Purata hari hingga dikeluarkan",
+    "Open now": "Terbuka sekarang",
+    "Created vs resolved per week": "Dicipta berbanding diselesaikan setiap minggu",
+    "Average days from created to released": "Purata hari dari dicipta hingga dikeluarkan",
+    "Created by system": "Dicipta mengikut sistem",
+    "Created by type": "Dicipta mengikut jenis",
+    "Open issues by priority": "Isu terbuka mengikut keutamaan"
 }

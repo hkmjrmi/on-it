@@ -54,6 +54,7 @@ Route::middleware([
 
     // Issues
     Route::get('my-issues', [User\IssueController::class, 'mine'])->name('my_issues');
+    Route::get('reports', [User\ReportController::class, 'index'])->name('reports');
     Route::get('board', [User\IssueBoardController::class, 'index'])->name('board');
     Route::patch('issues/{issue}/board', [User\IssueBoardController::class, 'move'])->name('issues.board.move');
     Route::post('issues/bulk', User\IssueBulkController::class)->name('issues.bulk');
