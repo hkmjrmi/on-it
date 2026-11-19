@@ -7,6 +7,11 @@
     </div>
 
     <div class="col-md">
+        <x-label for="progress">{{ __('Progress') }}</x-label>
+        <x-select name="progress" :options="['all' => __('All')] + \App\Enums\IssueProgress::labels()" x-model="params.progress" x-on:change="load()" :selected="request()->query('progress')" />
+    </div>
+
+    <div class="col-md">
         <x-label for="system">{{ __('System') }}</x-label>
         <x-select name="system" :options="['all' => __('All')] + \App\Enums\IssueSystem::labels()" x-model="params.system" x-on:change="load()" :selected="request()->query('system')" />
     </div>
@@ -86,10 +91,17 @@
         <strong class="me-1" x-text="__(':count selected', { count: selected.length })"></strong>
 
         <select class="form-select form-select-sm w-auto" x-model="bulk.action" aria-label="{{ __('Action') }}">
+            <option value="progress">{{ __('Change progress') }}</option>
             <option value="status">{{ __('Change status') }}</option>
             <option value="priority">{{ __('Change priority') }}</option>
             <option value="assignee">{{ __('Assign to') }}</option>
             <option value="archive">{{ __('Archive') }}</option>
+        </select>
+
+        <select class="form-select form-select-sm w-auto" x-model="bulk.progress" x-show="bulk.action === 'progress'" aria-label="{{ __('Progress') }}">
+            @foreach (\App\Enums\IssueProgress::labels() as $value => $label)
+                <option value="{{ $value }}">{{ $label }}</option>
+            @endforeach
         </select>
 
         <select class="form-select form-select-sm w-auto" x-model="bulk.status" x-show="bulk.action === 'status'" aria-label="{{ __('Status') }}">
@@ -129,11 +141,12 @@
                 @endif
 
                 <th style="width: 9%"><x-listpage-sorter column="id" :label="__('Key')" /></th>
-                <th style="width: 30%"><x-listpage-sorter column="title" :label="__('Title')" /></th>
+                <th style="width: 25%"><x-listpage-sorter column="title" :label="__('Title')" /></th>
                 <th class="text-center" style="width: 9%">{{ __('System') }}</th>
                 <th class="text-center" style="width: 9%">{{ __('Type') }}</th>
                 <th class="text-center" style="width: 9%"><x-listpage-sorter column="priority" :label="__('Priority')" /></th>
-                <th class="text-center" style="width: 12%"><x-listpage-sorter column="status" :label="__('Status')" /></th>
+                <th class="text-center" style="width: 8%"><x-listpage-sorter column="status" :label="__('Status')" /></th>
+                <th class="text-center" style="width: 11%"><x-listpage-sorter column="progress" :label="__('Progress')" /></th>
                 <th style="width: 12%">{{ __('Assignee') }}</th>
                 <th class="text-center" style="width: 10%"><x-listpage-sorter column="created_at" :label="__('Created At')" /></th>
             </tr>
@@ -157,12 +170,15 @@
                     <td class="text-center">
                         <span class="badge" x-bind:class="'text-bg-' + IssueStatus.contexts[issue.status]" x-text="IssueStatus.labels[issue.status]"></span>
                     </td>
+                    <td class="text-center">
+                        <span class="badge" x-bind:class="'text-bg-' + IssueProgress.contexts[issue.progress]" x-text="IssueProgress.labels[issue.progress]"></span>
+                    </td>
                     <td x-text="issue.assignee?.name ?? __('Unassigned')"></td>
                     <td class="text-center text-nowrap" x-html="Helper.formatDate(issue.created_at ?? '', 'Y-m-d H:i')"></td>
                 </tr>
             </template>
             <tr x-show="data.data.length === 0" x-cloak>
-                <td colspan="{{ $canBulk ? 9 : 8 }}" class="text-center text-muted">{{ __('No issues found.') }}</td>
+                <td colspan="{{ $canBulk ? 10 : 9 }}" class="text-center text-muted">{{ __('No issues found.') }}</td>
             </tr>
         </tbody>
     </table>

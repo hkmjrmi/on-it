@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;
@@ -69,8 +70,9 @@ class IssueSeeder extends Seeder
         $assignee = isset($data['assignee']) ? $users[$data['assignee']] : null;
         $reportedAt = $this->daysAgo($data['reported']);
         $workflow = $data['workflow'] ?? [];
-        $status = $workflow ? end($workflow)[0] : IssueStatus::New;
-        $releasedAt = collect($workflow)->first(fn (array $step) => $step[0] === IssueStatus::Released);
+        $progress = collect($workflow)->last(fn (array $step) => $step[0] instanceof IssueProgress)[0] ?? IssueProgress::New;
+        $status = collect($workflow)->last(fn (array $step) => $step[0] instanceof IssueStatus)[0] ?? IssueStatus::Open;
+        $releasedAt = collect($workflow)->first(fn (array $step) => $step[0] === IssueProgress::Released);
 
         $issue = Issue::forceCreate([
             'title' => $data['title'],
@@ -78,6 +80,7 @@ class IssueSeeder extends Seeder
             'type' => $data['type'],
             'system' => $data['system'],
             'priority' => $data['priority'],
+            'progress' => $progress,
             'status' => $status,
             'source' => IssueSource::fromRole($reporter->role),
             'merchant_name' => $data['merchant'] ?? null,
@@ -100,12 +103,13 @@ class IssueSeeder extends Seeder
             $events->push([$this->daysAgo($daysAgo), $users[$by], IssueActivityAction::PriorityChanged, $from->value, $data['priority']->value]);
         }
 
-        $previous = IssueStatus::New;
+        $previous = [IssueProgress::class => IssueProgress::New, IssueStatus::class => IssueStatus::Open];
 
         foreach ($workflow as $step) {
             $by = isset($step[2]) ? $users[$step[2]] : $assignee;
-            $events->push([$this->daysAgo($step[1]), $by, IssueActivityAction::StatusChanged, $previous->value, $step[0]->value]);
-            $previous = $step[0];
+            $action = $step[0] instanceof IssueStatus ? IssueActivityAction::StatusChanged : IssueActivityAction::ProgressChanged;
+            $events->push([$this->daysAgo($step[1]), $by, $action, $previous[$step[0]::class]->value, $step[0]->value]);
+            $previous[$step[0]::class] = $step[0];
         }
 
         foreach ($data['comments'] ?? [] as [$handle, $daysAgo, $body]) {
@@ -146,7 +150,7 @@ class IssueSeeder extends Seeder
     /**
      * Get the sample issues, based on the OnPay-Next system testing checklist.
      *
-     * Each workflow step is [status, days ago, optional user handle (defaults to the assignee)].
+     * Each workflow step is [progress or status, days ago, optional user handle (defaults to the assignee)].
      * Each comment is [user handle, days ago, body].
      *
      * @return array<int, array<string, mixed>>
@@ -163,7 +167,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'hakim',
                 'assignee' => 'zaim',
                 'reported' => 22,
-                'workflow' => [[IssueStatus::InDevelopment, 21.8]],
+                'workflow' => [[IssueProgress::InDevelopment, 21.8]],
                 'comments' => [
                     ['zaim', 20, 'Dah jumpa punca. Callback CHIP masih rujuk gateway asal pada rekod jualan, jadi verification skip. Tengah betulkan mapping gateway semasa pembayaran dikemas kini.'],
                     ['zaim', 6, 'Fix untuk status dah siap, tinggal pembetulan timezone pada tarikh & masa pembayaran. Akan push untuk review minggu ni.'],
@@ -189,8 +193,8 @@ class IssueSeeder extends Seeder
                 'assignee' => 'haq',
                 'reported' => 22,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 19],
-                    [IssueStatus::InReview, 1.2],
+                    [IssueProgress::InDevelopment, 19],
+                    [IssueProgress::InReview, 1.2],
                 ],
                 'comments' => [
                     ['haq', 18.9, 'Validation untuk description ada dalam shared form request. Saya asingkan rule untuk Borang Prospek supaya jadi optional semula.'],
@@ -208,10 +212,10 @@ class IssueSeeder extends Seeder
                 'assignee' => 'haiqal',
                 'reported' => 21,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 20],
-                    [IssueStatus::InReview, 9],
-                    [IssueStatus::ReadyToRelease, 6],
-                    [IssueStatus::Released, 2],
+                    [IssueProgress::InDevelopment, 20],
+                    [IssueProgress::InReview, 9],
+                    [IssueProgress::ReadyToRelease, 6],
+                    [IssueProgress::Released, 2],
                 ],
                 'comments' => [
                     ['haiqal', 19.8, 'Checkbox tak dihantar bila unchecked dan field ni tak ada dalam fillable. Tengah betulkan.'],
@@ -229,10 +233,11 @@ class IssueSeeder extends Seeder
                 'assignee' => 'ammar',
                 'reported' => 21,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 18],
-                    [IssueStatus::InReview, 12],
-                    [IssueStatus::ReadyToRelease, 9],
-                    [IssueStatus::Released, 5],
+                    [IssueProgress::InDevelopment, 18],
+                    [IssueProgress::InReview, 12],
+                    [IssueProgress::ReadyToRelease, 9],
+                    [IssueProgress::Released, 5],
+                    [IssueStatus::Closed, 4, 'ummi'],
                 ],
                 'comments' => [
                     ['ammar', 12, 'Butang Image List dah ditambah pada editor hebahan emel.'],
@@ -249,10 +254,10 @@ class IssueSeeder extends Seeder
                 'assignee' => 'hakim',
                 'reported' => 16,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 15.5],
-                    [IssueStatus::InReview, 8],
-                    [IssueStatus::ReadyToRelease, 4],
-                    [IssueStatus::Released, 1],
+                    [IssueProgress::InDevelopment, 15.5],
+                    [IssueProgress::InReview, 8],
+                    [IssueProgress::ReadyToRelease, 4],
+                    [IssueProgress::Released, 1],
                 ],
                 'comments' => [
                     ['hakim', 15, 'Setting disimpan tapi tak digunakan pada validation checkout. Saya tambah check di frontend dan backend.'],
@@ -270,9 +275,9 @@ class IssueSeeder extends Seeder
                 'assignee' => 'haiqal',
                 'reported' => 16,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 12],
-                    [IssueStatus::InReview, 5],
-                    [IssueStatus::ReadyToRelease, 3],
+                    [IssueProgress::InDevelopment, 12],
+                    [IssueProgress::InReview, 5],
+                    [IssueProgress::ReadyToRelease, 3],
                 ],
             ],
             [
@@ -285,9 +290,9 @@ class IssueSeeder extends Seeder
                 'assignee' => 'suhailah',
                 'reported' => 16,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 14],
-                    [IssueStatus::InReview, 6],
-                    [IssueStatus::ReadyToRelease, 2],
+                    [IssueProgress::InDevelopment, 14],
+                    [IssueProgress::InReview, 6],
+                    [IssueProgress::ReadyToRelease, 2],
                 ],
                 'comments' => [
                     ['suhailah', 13.8, 'Listener untuk event jualan disahkan tak register untuk komisen. Akan fix.'],
@@ -305,7 +310,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'ummi',
                 'assignee' => 'ammar',
                 'reported' => 14,
-                'workflow' => [[IssueStatus::InDevelopment, 13]],
+                'workflow' => [[IssueProgress::InDevelopment, 13]],
                 'comments' => [
                     ['ummi', 13.5, 'Merchant follow up lagi pagi ni, mereka nak hantar laporan kepada akauntan minggu ni.'],
                     ['hakim', 13, 'Naikkan ke Urgent sebab melibatkan laporan kewangan merchant.'],
@@ -330,7 +335,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'support',
                 'assignee' => 'haiqal',
                 'reported' => 13,
-                'workflow' => [[IssueStatus::InDevelopment, 7]],
+                'workflow' => [[IssueProgress::InDevelopment, 7]],
             ],
             [
                 'title' => 'Pautan pendek hanya ada pilihan ab.opy.la',
@@ -341,7 +346,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'ummi',
                 'assignee' => 'hakim',
                 'reported' => 12,
-                'workflow' => [[IssueStatus::Rejected, 11]],
+                'workflow' => [[IssueStatus::WontFix, 11]],
                 'comments' => [
                     ['hakim', 11, 'Bukan isu sistem. Domain yup.la dan ezy.la belum ditambah dalam config environment testing. Di production semua domain akan tersedia.'],
                 ],
@@ -365,7 +370,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'ummi',
                 'assignee' => 'haiqal',
                 'reported' => 9,
-                'workflow' => [[IssueStatus::InDevelopment, 8]],
+                'workflow' => [[IssueProgress::InDevelopment, 8]],
                 'comments' => [
                     ['haiqal', 7.9, 'Akan tambah "Jana Kata Laluan Rawak" sahaja. Fungsi "Hantar kata laluan baru kepada pengguna" tidak diteruskan atas sebab keselamatan.'],
                 ],
@@ -380,7 +385,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'ummi',
                 'assignee' => 'haiqal',
                 'reported' => 6,
-                'workflow' => [[IssueStatus::InDevelopment, 5.8]],
+                'workflow' => [[IssueProgress::InDevelopment, 5.8]],
                 'comments' => [
                     ['haiqal', 5.7, 'Boleh reproduce. Teks nama bank tak wrap dalam radio card. Akan fix CSS untuk paparan mudah alih.'],
                 ],
@@ -396,8 +401,8 @@ class IssueSeeder extends Seeder
                 'assignee' => 'zaim',
                 'reported' => 6,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 5],
-                    [IssueStatus::NeedInfo, 4],
+                    [IssueProgress::InDevelopment, 5],
+                    [IssueProgress::NeedInfo, 4],
                 ],
                 'comments' => [
                     ['zaim', 4, 'Merchant perlukan Payment Intent ID sahaja atau Charge ID sekali? Boleh minta contoh fail reconcile yang mereka guna sekarang?'],
@@ -423,8 +428,8 @@ class IssueSeeder extends Seeder
                 'assignee' => 'suhailah',
                 'reported' => 5,
                 'workflow' => [
-                    [IssueStatus::InDevelopment, 4.5],
-                    [IssueStatus::NeedInfo, 3],
+                    [IssueProgress::InDevelopment, 4.5],
+                    [IssueProgress::NeedInfo, 3],
                 ],
                 'comments' => [
                     ['suhailah', 3, 'Tak dapat reproduce dengan akaun test. Boleh dapatkan nombor invois jualan yang terlibat dan nombor tracking dari merchant?'],
@@ -449,7 +454,7 @@ class IssueSeeder extends Seeder
                 'reporter' => 'support',
                 'assignee' => 'hakim',
                 'reported' => 2,
-                'workflow' => [[IssueStatus::Rejected, 1.5]],
+                'workflow' => [[IssueStatus::WontFix, 1.5]],
                 'comments' => [
                     ['hakim', 1.5, 'Feature Jana PDF tidak akan diteruskan untuk OnPay-Next. Merchant boleh eksport ke Excel dan print sebagai PDF.'],
                 ],

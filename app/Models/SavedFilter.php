@@ -14,6 +14,7 @@ class SavedFilter extends Model
      */
     public const array PARAMS = [
         'status',
+        'progress',
         'system',
         'type',
         'priority',

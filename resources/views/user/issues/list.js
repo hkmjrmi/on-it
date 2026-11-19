@@ -5,6 +5,7 @@ Alpine.data('ListPage', () =>
         defaultParams: {
             page: 1,
             status: 'all',
+            progress: 'all',
             type: 'all',
             system: 'all',
             priority: 'all',
@@ -18,7 +19,7 @@ Alpine.data('ListPage', () =>
         },
 
         filterBy(params) {
-            Object.assign(this.params, { status: 'all', assignee: 'all', open: 0, released_this_week: 0, archived: 0, page: 1 }, params);
+            Object.assign(this.params, { status: 'all', progress: 'all', assignee: 'all', open: 0, released_this_week: 0, archived: 0, page: 1 }, params);
             this.load();
         },
 
@@ -26,10 +27,10 @@ Alpine.data('ListPage', () =>
 
         selected: [],
 
-        bulk: { action: 'status', status: 'in_development', priority: 'medium', assigned_to: '' },
+        bulk: { action: 'progress', status: 'closed', progress: 'in_development', priority: 'medium', assigned_to: '' },
 
         applyBulk() {
-            const field = { status: 'status', priority: 'priority', assignee: 'assigned_to' }[this.bulk.action];
+            const field = { status: 'status', progress: 'progress', priority: 'priority', assignee: 'assigned_to' }[this.bulk.action];
             const payload = { ids: this.selected, action: this.bulk.action };
 
             if (field) {

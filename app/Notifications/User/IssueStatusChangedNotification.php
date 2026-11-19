@@ -40,10 +40,9 @@ class IssueStatusChangedNotification extends BaseIssueNotification
      */
     public static function message(array $data): string
     {
-        return __(':name changed :key from :from to :to', [
+        return __(':name marked :key as :to', [
             'name' => $data['actor_name'],
             'key' => $data['issue_key'],
-            'from' => IssueStatus::tryFrom($data['from'] ?? '')?->label() ?? '-',
             'to' => IssueStatus::tryFrom($data['to'] ?? '')?->label() ?? '-',
         ]);
     }
@@ -53,7 +52,7 @@ class IssueStatusChangedNotification extends BaseIssueNotification
      */
     protected function subject(): string
     {
-        return __('Status changed to :status', ['status' => $this->issue->status->label()]);
+        return __('Marked as :status', ['status' => $this->issue->status->label()]);
     }
 
     /**
@@ -61,17 +60,13 @@ class IssueStatusChangedNotification extends BaseIssueNotification
      */
     protected function buildMail(MailMessage $mail): MailMessage
     {
-        $status = $this->issue->status;
-
         return $mail
             ->line(__(':name changed the status of **:title** from :from to :to.', [
                 'name' => $this->actor->name,
                 'title' => $this->issue->title,
                 'from' => $this->from->label(),
-                'to' => $status->label(),
+                'to' => $this->issue->status->label(),
             ]))
-            ->line($status->in([IssueStatus::NeedInfo, IssueStatus::Rejected])
-                ? __('What to do next: :message', ['message' => $status->customerMessage()])
-                : __('What you can tell the customer: ":message"', ['message' => $status->customerMessage()]));
+            ->line($this->issue->status->description());
     }
 }

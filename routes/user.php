@@ -61,6 +61,7 @@ Route::middleware([
     Route::post('issues/{issue}/archive', [User\IssueArchiveController::class, 'store'])->name('issues.archive');
     Route::delete('issues/{issue}/archive', [User\IssueArchiveController::class, 'destroy'])->name('issues.unarchive');
     Route::patch('issues/{issue}/workflow', User\IssueWorkflowController::class)->name('issues.workflow');
+    Route::patch('issues/{issue}/status', User\IssueStatusController::class)->name('issues.status');
     Route::get('attachments/{attachment}', User\IssueAttachmentController::class)->name('attachments.show');
 
     // Saved filters

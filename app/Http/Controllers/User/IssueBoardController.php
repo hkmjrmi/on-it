@@ -4,7 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Actions\UpdateIssueWorkflow;
 use App\Enums\IssuePriority;
-use App\Enums\IssueStatus;
+use App\Enums\IssueProgress;
 use App\Enums\IssueSystem;
 use App\Enums\UserRole;
 use App\Http\Controllers\Controller;
@@ -29,22 +29,23 @@ class IssueBoardController extends Controller
 
         $query = fn () => Issue::query()
             ->archived(false)
+            ->open()
             ->system($request->enum('system', IssueSystem::class))
             ->priority($request->enum('priority', IssuePriority::class))
             ->assignee($request->query('assignee'));
 
-        $counts = $query()->groupBy('status')->selectRaw('status, count(*) as total')->pluck('total', 'status');
+        $counts = $query()->groupBy('progress')->selectRaw('progress, count(*) as total')->pluck('total', 'progress');
 
-        $columns = collect(IssueStatus::cases())->map(fn (IssueStatus $status) => [
-            'status' => $status,
-            'total' => (int) ($counts[$status->value] ?? 0),
+        $columns = collect(IssueProgress::cases())->map(fn (IssueProgress $progress) => [
+            'progress' => $progress,
+            'total' => (int) ($counts[$progress->value] ?? 0),
             'issues' => $query()
-                ->status($status)
+                ->progress($progress)
                 ->with('assignee:id,name,role')
                 ->orderByEnum('priority', IssuePriority::cases(), 'desc')
                 ->latest('id')
                 ->limit(self::COLUMN_LIMIT)
-                ->get(['id', 'key', 'title', 'system', 'priority', 'status', 'assigned_to']),
+                ->get(['id', 'key', 'title', 'system', 'priority', 'progress', 'assigned_to']),
         ]);
 
         $assignees = User::query()->where('role', UserRole::Programmer)->orderBy('name')->pluck('name', 'id');
@@ -53,20 +54,20 @@ class IssueBoardController extends Controller
     }
 
     /**
-     * Move the specified issue to another status.
+     * Move the specified issue to another progress step.
      */
     public function move(Request $request, Issue $issue, UpdateIssueWorkflow $updateWorkflow)
     {
         Gate::authorize('changeWorkflow', $issue);
 
         $validated = $request->validate([
-            'status' => ['required', 'enum:' . IssueStatus::class],
+            'progress' => ['required', 'enum:' . IssueProgress::class],
         ]);
 
         $updateWorkflow->handle($issue, $request->user(), $validated);
 
         return response()->json([
-            'message' => __('Issue :key moved to :status.', ['key' => $issue->key, 'status' => $issue->status->label()]),
+            'message' => __('Issue :key moved to :status.', ['key' => $issue->key, 'status' => $issue->progress->label()]),
         ]);
     }
 }

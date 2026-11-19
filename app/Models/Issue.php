@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Gate;
 use Onpay\Core\Eloquent\Concerns\SortStringResolver;
 use Onpay\Core\Eloquent\Concerns\ValueSearcher;
 
@@ -39,6 +41,7 @@ class Issue extends Model
         'type',
         'system',
         'priority',
+        'progress',
         'status',
         'source',
         'merchant_name',
@@ -59,6 +62,7 @@ class Issue extends Model
             'type' => IssueType::class,
             'system' => IssueSystem::class,
             'priority' => IssuePriority::class,
+            'progress' => IssueProgress::class,
             'status' => IssueStatus::class,
             'source' => IssueSource::class,
             'released_at' => 'datetime',
@@ -125,6 +129,37 @@ class Issue extends Model
     }
 
     /**
+     * Scope a query to only include issues with the given progress.
+     */
+    public function scopeProgress(Builder $query, IssueProgress|null $progress): void
+    {
+        if ($progress) {
+            $query->where('progress', $progress);
+        }
+    }
+
+    /**
+     * Determine if the issue is closed or won't be fixed.
+     */
+    public function isResolved(): bool
+    {
+        return $this->status->in(IssueStatus::resolved());
+    }
+
+    /**
+     * Get the statuses the user may move the issue to, besides its current one.
+     *
+     * @return array<int, \App\Enums\IssueStatus>
+     */
+    public function statusOptionsFor(User $user): array
+    {
+        return array_values(array_filter(
+            IssueStatus::cases(),
+            fn (IssueStatus $status) => Gate::forUser($user)->allows('setStatus', [$this, $status]),
+        ));
+    }
+
+    /**
      * Scope a query to only include archived issues, or only unarchived issues.
      */
     public function scopeArchived(Builder $query, bool $archived = true): void
@@ -145,7 +180,7 @@ class Issue extends Model
      */
     public function scopeOpen(Builder $query): void
     {
-        $query->whereNotIn('status', IssueStatus::closed());
+        $query->status(IssueStatus::Open);
     }
 
     /**
@@ -153,7 +188,7 @@ class Issue extends Model
      */
     public function scopeReleasedThisWeek(Builder $query): void
     {
-        $query->status(IssueStatus::Released)->where('released_at', '>=', now()->startOfWeek());
+        $query->progress(IssueProgress::Released)->where('released_at', '>=', now()->startOfWeek());
     }
 
     /**

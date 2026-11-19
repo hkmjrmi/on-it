@@ -33,6 +33,6 @@ class IssueAssignedNotification extends BaseIssueNotification
             ->line(__(':name assigned an issue to you.', ['name' => $this->actor->name]))
             ->line('**' . $this->issue->title . '**')
             ->line(__('Priority: :priority', ['priority' => $this->issue->priority->label()]))
-            ->line(__('Status: :status', ['status' => $this->issue->status->label()]));
+            ->line(__('Progress: :progress', ['progress' => $this->issue->progress->label()]));
     }
 }

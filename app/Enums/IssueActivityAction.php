@@ -14,6 +14,7 @@ enum IssueActivityAction: string
     case Edited = 'edited';
     case Assigned = 'assigned';
     case StatusChanged = 'status_changed';
+    case ProgressChanged = 'progress_changed';
     case PriorityChanged = 'priority_changed';
     case Commented = 'commented';
     case CommentEdited = 'comment_edited';
@@ -31,6 +32,7 @@ enum IssueActivityAction: string
             self::Edited => __('Edited'),
             self::Assigned => __('Assigned'),
             self::StatusChanged => __('Status Changed'),
+            self::ProgressChanged => __('Progress Changed'),
             self::PriorityChanged => __('Priority Changed'),
             self::Commented => __('Commented'),
             self::CommentEdited => __('Comment Edited'),

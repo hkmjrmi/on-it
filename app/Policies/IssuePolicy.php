@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Models\Issue;
 use App\Models\IssueComment;
@@ -46,11 +47,11 @@ class IssuePolicy
      */
     public function delete(User $user, Issue $issue): bool
     {
-        return $user->id === $issue->created_by && $issue->status === IssueStatus::New;
+        return $user->id === $issue->created_by && $issue->progress === IssueProgress::New && $issue->status === IssueStatus::Open;
     }
 
     /**
-     * Determine whether the user can change the issue's status, priority and assignee.
+     * Determine whether the user can change the issue's progress, priority and assignee.
      */
     public function changeWorkflow(User $user, Issue $issue): bool
     {
@@ -58,11 +59,34 @@ class IssuePolicy
     }
 
     /**
+     * Determine whether the user can move the issue to the given status.
+     *
+     * Coordinators can set any status. Programmers can set Open, On Hold and Won't Fix,
+     * but not close or reopen a closed issue. Customer Support can close an open or
+     * on-hold issue, and reopen a closed or won't-fix issue.
+     */
+    public function setStatus(User $user, Issue $issue, IssueStatus $status): bool
+    {
+        if ($issue->status === $status) {
+            return false;
+        }
+
+        return match (true) {
+            $user->isCoordinator() => true,
+            $user->isProgrammer() => $issue->status !== IssueStatus::Closed && $status !== IssueStatus::Closed,
+            $user->isCustomerSupport() => $status === IssueStatus::Closed
+                ? $issue->status->in([IssueStatus::Open, IssueStatus::OnHold])
+                : $status === IssueStatus::Open && $issue->isResolved(),
+            default => false,
+        };
+    }
+
+    /**
      * Determine whether the user can archive the issue.
      */
     public function archive(User $user, Issue $issue): bool
     {
-        return $user->canTriage() && !$issue->isArchived() && $issue->status->in(IssueStatus::closed());
+        return $user->canTriage() && !$issue->isArchived() && $issue->isResolved();
     }
 
     /**
