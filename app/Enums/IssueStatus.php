@@ -51,38 +51,6 @@ enum IssueStatus: string
     }
 
     /**
-     * Get the plain-language explanation of the case for the Status Guide.
-     */
-    public function meaning(): string
-    {
-        return match ($this) {
-            self::New => __('The issue has been reported but no programmer has picked it up yet.'),
-            self::InDevelopment => __('A programmer is assigned and is finding the cause and working on the fix.'),
-            self::InReview => __("The fix is written. Another programmer is checking it to make sure it works and doesn't break anything else."),
-            self::ReadyToRelease => __("The fix is checked and approved, but it's not live yet. It will go out in the next system update. The customer will still see the problem until then."),
-            self::Released => __('The fix is live. The customer should now see it working.'),
-            self::NeedInfo => __("The programmer is stuck and needs more details: screenshots, an order number, or steps to repeat the problem. Check the comments to see what's needed."),
-            self::Rejected => __("It won't be worked on. Usually it's not a bug (the system works as designed), a duplicate, or a suggestion that isn't planned. The reason is in the comments."),
-        };
-    }
-
-    /**
-     * Get the restaurant analogy for the case.
-     */
-    public function analogy(): string
-    {
-        return match ($this) {
-            self::New => __('The order slip is on the kitchen counter, waiting for a cook.'),
-            self::InDevelopment => __('The cook is preparing the dish.'),
-            self::InReview => __('The head chef is tasting the dish before it leaves the kitchen.'),
-            self::ReadyToRelease => __('The dish is ready on the counter, waiting for the waiter to bring it out.'),
-            self::Released => __('The dish has been served.'),
-            self::NeedInfo => __('The cook asks, "Spicy or not spicy?"'),
-            self::Rejected => __('"Sorry, that item isn\'t on our menu."'),
-        };
-    }
-
-    /**
      * Get what Customer Support can tell the customer for the case.
      */
     public function customerMessage(): string
@@ -119,7 +87,7 @@ enum IssueStatus: string
      */
     public function badgeClass(): string
     {
-        return 'badge-status-' . $this->value;
+        return 'text-bg-' . $this->context();
     }
 
     /**

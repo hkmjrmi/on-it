@@ -3,11 +3,8 @@
 @section('title', __('Reports'))
 
 @section('content')
-    <div class="onit-page-header">
-        <div>
-            <h1>@yield('title')</h1>
-            <p>{{ __('How issues are flowing, week by week') }}</p>
-        </div>
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+        <p class="text-muted mb-0">{{ __('How issues are flowing, week by week') }}</p>
 
         <form method="GET" action="{{ route('user.reports') }}" x-data>
             <x-select name="weeks" :aria-label="__('Range')" :options="collect(\App\Http\Controllers\User\ReportController::RANGES)->mapWithKeys(fn ($range) => [$range => __('Last :count weeks', ['count' => $range])])->all()" :selected="$weeks" x-on:change="$el.form.requestSubmit()" />
@@ -16,11 +13,11 @@
 
     <div class="row g-3 mb-4">
         @foreach ([
-            ['label' => __('Created'), 'value' => number_format($totals['created'])],
-            ['label' => __('Resolved'), 'value' => number_format($totals['resolved'])],
-            ['label' => __('Avg. days to release'), 'value' => $totals['days_to_release'] ?? '-'],
-            ['label' => __('Open now'), 'value' => number_format($totals['open'])],
-        ] as $tile)
+                      ['label' => __('Created'), 'value' => number_format($totals['created'])],
+                      ['label' => __('Resolved'), 'value' => number_format($totals['resolved'])],
+                      ['label' => __('Avg. days to release'), 'value' => $totals['days_to_release'] ?? '-'],
+                      ['label' => __('Open now'), 'value' => number_format($totals['open'])],
+                  ] as $tile)
             <div class="col-6 col-lg-3">
                 <div class="card h-100">
                     <div class="card-body">

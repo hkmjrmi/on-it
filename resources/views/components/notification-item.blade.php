@@ -10,6 +10,7 @@
         @if (filled($notification->data['comment_excerpt'] ?? null))
             <span class="d-block small text-muted fw-normal text-truncate">"{{ $notification->data['comment_excerpt'] }}"</span>
         @endif
+
         <time class="d-block small text-muted fw-normal" datetime="{{ $notification->created_at->toIso8601String() }}" title="{{ $notification->created_at }}">{{ $notification->created_at->diffForHumans() }}</time>
     </span>
 </a>

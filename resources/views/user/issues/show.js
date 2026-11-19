@@ -96,7 +96,13 @@ Alpine.data('IssuePage', () => ({
 
     remove() {
         abmodal({
-            message: __('Do you want to delete this issue?') + '<br>' + eh(PageData.issue.key + ' ' + PageData.issue.title) + '<br><small class="text-muted">' + __('This cannot be undone.') + '</small>',
+            message:
+                __('Do you want to delete this issue?') +
+                '<br>' +
+                eh(PageData.issue.key + ' ' + PageData.issue.title) +
+                '<br><small class="text-muted">' +
+                __('This cannot be undone.') +
+                '</small>',
             onEscape: true,
             buttons: {
                 yes: {

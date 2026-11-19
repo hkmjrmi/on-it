@@ -46,7 +46,7 @@ enum IssuePriority: string
      */
     public function badgeClass(): string
     {
-        return 'badge-priority-' . $this->value;
+        return 'text-bg-' . $this->context();
     }
 
     /**

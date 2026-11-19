@@ -1,34 +1,35 @@
 @php($canBulk = auth()->user()->can('changeWorkflow', new \App\Models\Issue()))
 
-<div class="onit-filters row g-2 mb-3">
-    <div class="col-12 col-lg-4">
-        <x-listpage-searchbox name="search_value" :placeholder="__('Search by title, key or merchant name')" />
+<div class="row g-2 mb-3">
+    <div class="col-md">
+        <x-label for="status">{{ __('Status') }}</x-label>
+        <x-select name="status" :options="['all' => __('All')] + \App\Enums\IssueStatus::labels()" x-model="params.status" x-on:change="load()" :selected="request()->query('status')" />
     </div>
 
-    <div class="col-6 col-md-4 col-lg">
-        <x-select name="status" :aria-label="__('Status')" :options="['all' => __('All statuses')] + \App\Enums\IssueStatus::labels()" x-model="params.status" x-on:change="params.page = 1; load()" :selected="request()->query('status')" />
+    <div class="col-md">
+        <x-label for="system">{{ __('System') }}</x-label>
+        <x-select name="system" :options="['all' => __('All')] + \App\Enums\IssueSystem::labels()" x-model="params.system" x-on:change="load()" :selected="request()->query('system')" />
     </div>
 
-    <div class="col-6 col-md-4 col-lg">
-        <x-select name="system" :aria-label="__('System')" :options="['all' => __('All systems')] + \App\Enums\IssueSystem::labels()" x-model="params.system" x-on:change="params.page = 1; load()" :selected="request()->query('system')" />
+    <div class="col-md">
+        <x-label for="type">{{ __('Type') }}</x-label>
+        <x-select name="type" :options="['all' => __('All')] + \App\Enums\IssueType::labels()" x-model="params.type" x-on:change="load()" :selected="request()->query('type')" />
     </div>
 
-    <div class="col-6 col-md-4 col-lg">
-        <x-select name="type" :aria-label="__('Type')" :options="['all' => __('All types')] + \App\Enums\IssueType::labels()" x-model="params.type" x-on:change="params.page = 1; load()" :selected="request()->query('type')" />
+    <div class="col-md">
+        <x-label for="priority">{{ __('Priority') }}</x-label>
+        <x-select name="priority" :options="['all' => __('All')] + \App\Enums\IssuePriority::labels()" x-model="params.priority" x-on:change="load()" :selected="request()->query('priority')" />
     </div>
 
-    <div class="col-6 col-md-4 col-lg">
-        <x-select name="priority" :aria-label="__('Priority')" :options="['all' => __('All priorities')] + \App\Enums\IssuePriority::labels()" x-model="params.priority" x-on:change="params.page = 1; load()" :selected="request()->query('priority')" />
-    </div>
-
-    <div class="col-6 col-md-4 col-lg">
-        <x-select name="assignee" :aria-label="__('Assignee')" :options="['all' => __('All assignees'), 'unassigned' => __('Unassigned')] + $assignees->all()" x-model="params.assignee" x-on:change="params.page = 1; load()" :selected="request()->query('assignee')" />
+    <div class="col-md">
+        <x-label for="assignee">{{ __('Assignee') }}</x-label>
+        <x-select name="assignee" :options="['all' => __('All'), 'unassigned' => __('Unassigned')] + $assignees->all()" x-model="params.assignee" x-on:change="load()" :selected="request()->query('assignee')" />
     </div>
 </div>
 
-<div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+<div class="d-flex flex-wrap align-items-center gap-2 mb-2">
     <div class="dropdown">
-        <button type="button" class="btn btn-outline btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+        <button type="button" class="btn btn-outline-secondary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             <span class="far fa-bookmark me-1" aria-hidden="true"></span>
             {{ __('Saved filters') }}
         </button>
@@ -53,20 +54,32 @@
         </div>
     </div>
 
-    <span class="onit-filter-chip" x-show="params.open == 1" @unless (request()->boolean('open')) x-cloak @endunless>
+    <span class="badge text-bg-light border" x-show="params.open == 1" @unless (request()->boolean('open')) x-cloak @endunless>
         {{ __('Open issues only') }}
-        <a href="#" x-on:click.prevent="params.open = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
+        <a href="#" class="ms-1 text-reset text-decoration-none" x-on:click.prevent="
+            params.open = 0
+            load()
+        " aria-label="{{ __('Remove') }}">&times;</a>
     </span>
-    <span class="onit-filter-chip" x-show="params.released_this_week == 1" @unless (request()->boolean('released_this_week')) x-cloak @endunless>
+    <span class="badge text-bg-light border" x-show="params.released_this_week == 1" @unless (request()->boolean('released_this_week')) x-cloak @endunless>
         {{ __('Released This Week') }}
-        <a href="#" x-on:click.prevent="params.released_this_week = 0; load()" aria-label="{{ __('Remove') }}">&times;</a>
+        <a href="#" class="ms-1 text-reset text-decoration-none" x-on:click.prevent="
+            params.released_this_week = 0
+            load()
+        " aria-label="{{ __('Remove') }}">&times;</a>
     </span>
 
     <div class="form-check form-switch ms-auto mb-0">
-        <input class="form-check-input" type="checkbox" role="switch" id="filter-archived" x-bind:checked="params.archived == 1" x-on:change="params.archived = $event.target.checked ? 1 : 0; params.page = 1; load()" @checked(request()->boolean('archived')) />
+        <input class="form-check-input" type="checkbox" role="switch" id="filter-archived" x-bind:checked="params.archived == 1" x-on:change="
+            params.archived = $event.target.checked ? 1 : 0
+            params.page = 1
+            load()
+        " @checked(request()->boolean('archived')) />
         <label class="form-check-label small" for="filter-archived">{{ __('Archived issues only') }}</label>
     </div>
 </div>
+
+<x-listpage-searchbox class="mb-3" name="search_value" :placeholder="__('Search by title, key or merchant name')" />
 
 @if ($canBulk)
     <div class="d-flex flex-wrap align-items-center gap-2 mb-3 p-2 border rounded" x-show="selected.length > 0" x-init="$watch('data', () => (selected = []))" x-cloak>
@@ -103,61 +116,59 @@
     </div>
 @endif
 
+<div>{{ $issues->links() }}</div>
+
 <x-listpage-table>
-    <table class="table table-hover align-middle onit-table">
+    <table class="table table-sm table-bordered table-hover">
         <thead>
             <tr>
                 @if ($canBulk)
-                    <th style="width: 1%">
+                    <th class="text-center" style="width: 1%">
                         <input type="checkbox" class="form-check-input" aria-label="{{ __('Select all on this page') }}" x-bind:checked="data.data.length > 0 && selected.length === data.data.length" x-on:change="selected = $event.target.checked ? data.data.map((issue) => issue.id) : []" />
                     </th>
                 @endif
+
                 <th style="width: 9%"><x-listpage-sorter column="id" :label="__('Key')" /></th>
-                <th style="width: 29%"><x-listpage-sorter column="title" :label="__('Title')" /></th>
-                <th style="width: 9%">{{ __('System') }}</th>
-                <th style="width: 9%">{{ __('Type') }}</th>
-                <th style="width: 10%"><x-listpage-sorter column="priority" :label="__('Priority')" /></th>
-                <th style="width: 12%"><x-listpage-sorter column="status" :label="__('Status')" /></th>
+                <th style="width: 30%"><x-listpage-sorter column="title" :label="__('Title')" /></th>
+                <th class="text-center" style="width: 9%">{{ __('System') }}</th>
+                <th class="text-center" style="width: 9%">{{ __('Type') }}</th>
+                <th class="text-center" style="width: 9%"><x-listpage-sorter column="priority" :label="__('Priority')" /></th>
+                <th class="text-center" style="width: 12%"><x-listpage-sorter column="status" :label="__('Status')" /></th>
                 <th style="width: 12%">{{ __('Assignee') }}</th>
-                <th style="width: 10%"><x-listpage-sorter column="created_at" :label="__('Created')" /></th>
+                <th class="text-center" style="width: 10%"><x-listpage-sorter column="created_at" :label="__('Created At')" /></th>
             </tr>
         </thead>
         <tbody>
             <template x-for="(issue, index) in data.data" x-bind:key="issue.id">
                 <tr role="button" x-on:click="open(issue)">
                     @if ($canBulk)
-                        <td x-on:click.stop>
+                        <td class="text-center" x-on:click.stop>
                             <input type="checkbox" class="form-check-input" x-bind:value="issue.id" x-model.number="selected" x-bind:aria-label="__('Select :key', { key: issue.key })" />
                         </td>
                     @endif
-                    <td class="issue-key" x-text="issue.key"></td>
-                    <td class="text-break"><a class="issue-title" x-bind:href="zroute('user.issues.show', issue.key)" x-on:click.stop x-text="issue.title"></a></td>
-                    <td x-text="IssueSystem.labels[issue.system] ?? '-'"></td>
-                    <td class="text-muted" x-text="IssueType.labels[issue.type]"></td>
-                    <td>
-                        <span class="badge" x-bind:class="'badge-priority-' + issue.priority" x-text="IssuePriority.labels[issue.priority]"></span>
+
+                    <td class="text-nowrap" x-text="issue.key"></td>
+                    <td class="text-break" x-text="issue.title"></td>
+                    <td class="text-center" x-text="IssueSystem.labels[issue.system] ?? '-'"></td>
+                    <td class="text-center" x-text="IssueType.labels[issue.type]"></td>
+                    <td class="text-center">
+                        <span class="badge" x-bind:class="'text-bg-' + IssuePriority.contexts[issue.priority]" x-text="IssuePriority.labels[issue.priority]"></span>
                     </td>
-                    <td>
-                        <span class="badge text-nowrap" x-bind:class="'badge-status-' + issue.status" x-text="IssueStatus.labels[issue.status]"></span>
+                    <td class="text-center">
+                        <span class="badge" x-bind:class="'text-bg-' + IssueStatus.contexts[issue.status]" x-text="IssueStatus.labels[issue.status]"></span>
                     </td>
-                    <td>
-                        <span x-show="issue.assignee" x-text="issue.assignee?.name"></span>
-                        <span class="text-muted fst-italic" x-show="!issue.assignee">{{ __('Unassigned') }}</span>
-                    </td>
-                    <td class="text-nowrap text-muted" x-html="Helper.formatDate(issue.created_at ?? '', 'j M Y')"></td>
+                    <td x-text="issue.assignee?.name ?? __('Unassigned')"></td>
+                    <td class="text-center text-nowrap" x-html="Helper.formatDate(issue.created_at ?? '', 'Y-m-d H:i')"></td>
                 </tr>
             </template>
             <tr x-show="data.data.length === 0" x-cloak>
-                <td colspan="{{ $canBulk ? 9 : 8 }}" class="text-center text-muted py-5">{{ __('No issues found.') }}</td>
+                <td colspan="{{ $canBulk ? 9 : 8 }}" class="text-center text-muted">{{ __('No issues found.') }}</td>
             </tr>
         </tbody>
     </table>
 </x-listpage-table>
 
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 pt-3 text-muted small">
-    <span x-text="trans_choice(@js(__('app.issue_count')), data.meta.total, { count: data.meta.total.toLocaleString() })">{{ trans_choice(__('app.issue_count'), $issues->total(), ['count' => number_format($issues->total())]) }}</span>
-    <div>{{ $issues->links() }}</div>
-</div>
+<div>{{ $issues->links() }}</div>
 
 @push('js')
     <script type="text/javascript">

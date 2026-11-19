@@ -1,86 +1,5 @@
-// Brand palette
-$onit-navy: #0f1f4d;
-$onit-navy-light: #1c3270;
-$onit-pink: #e8127c;
-$onit-pink-dark: #c40d68;
-$onit-pink-soft: #fde7f2;
-$onit-subtle: #f6f7fb;
-$onit-border: #e3e6ef;
-$onit-muted: #5f6b85;
-
 // Typography
-$font-family-sans-serif:
-    'Inter Tight',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
-$font-size-base: 0.9375rem;
-$headings-font-weight: 500;
-$headings-color: $onit-navy;
-
-// Colours
-$primary: $onit-pink;
-$dark: $onit-navy;
-$body-color: $onit-navy;
-$body-secondary-color: $onit-muted;
-$text-muted: $onit-muted;
-$border-color: $onit-border;
-$link-color: $onit-pink;
-$link-decoration: none;
-$link-hover-color: $onit-pink-dark;
-$min-contrast-ratio: 3;
-
-// Shapes
-$border-radius: 0.875rem;
-$border-radius-sm: 0.625rem;
-$border-radius-lg: 1.25rem;
-$box-shadow:
-    0 1px 2px rgba($onit-navy, 0.04),
-    0 18px 40px -12px rgba($onit-navy, 0.12);
-$box-shadow-sm:
-    0 1px 2px rgba($onit-navy, 0.04),
-    0 8px 20px -10px rgba($onit-navy, 0.12);
-
-// Cards
-$card-border-width: 0;
-$card-border-radius: 28px;
-$card-spacer-y: 1.625rem;
-$card-spacer-x: 1.625rem;
-$card-cap-bg: transparent;
-
-// Buttons
-$btn-border-radius: 999px;
-$btn-border-radius-sm: 999px;
-$btn-border-radius-lg: 999px;
-$btn-padding-x: 1.25rem;
-$btn-padding-y: 0.625rem;
-$btn-font-weight: 500;
-
-// Forms
-$input-bg: $onit-subtle;
-$input-border-color: transparent;
-$input-border-radius: 14px;
-$input-border-radius-sm: 12px;
-$input-border-radius-lg: 16px;
-$input-padding-x: 0.875rem;
-$input-padding-y: 0.6875rem;
-$input-focus-bg: #fff;
-$input-focus-border-color: $onit-pink;
-$input-focus-box-shadow: 0 0 0 3px $onit-pink-soft;
-$form-label-font-weight: 600;
-
-// Badges
-$badge-font-weight: 500;
-$badge-border-radius: 999px;
-$badge-padding-x: 0.85em;
-$badge-padding-y: 0.4em;
-
-// Tables
-$table-cell-padding-y: 0.875rem;
-$table-cell-padding-x: 0.75rem;
-$table-hover-bg-factor: 0.04;
+$font-family-sans-serif: 'Figtree', sans-serif;
 
 // Options
 $enable-negative-margins: true;
@@ -90,4 +9,3 @@ $enable-negative-margins: true;
 
 // Custom
 @import 'custom';
-@import 'onit';

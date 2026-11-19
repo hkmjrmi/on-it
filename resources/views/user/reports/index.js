@@ -25,7 +25,13 @@
                 labels: report.weeks,
                 datasets: [
                     { label: __('Created'), data: report.created, borderColor: color('--bs-primary'), backgroundColor: color('--bs-primary'), borderWidth: 2 },
-                    { label: __('Resolved'), data: report.resolved, borderColor: color('--bs-success'), backgroundColor: color('--bs-success'), borderWidth: 2 },
+                    {
+                        label: __('Resolved'),
+                        data: report.resolved,
+                        borderColor: color('--bs-success'),
+                        backgroundColor: color('--bs-success'),
+                        borderWidth: 2,
+                    },
                 ],
             },
             options: {

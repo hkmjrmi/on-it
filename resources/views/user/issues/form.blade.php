@@ -1,101 +1,107 @@
 @extends('layouts.user')
 
-@section('title', __('Create Issue'))
+@section('title', __('New Issue'))
 
 @section('content')
-    <div class="onit-page-header">
-        <div>
-            <h1>@yield('title')</h1>
+    <div class="col-md-12">
+        @if ($source)
+            <div class="alert alert-info">
+                {!! __('Cloned from :key. Comments, attachments, status and assignee are not copied.', ['key' => '<a href="' . e(route('user.issues.show', $source)) . '">' . e($source->key) . '</a>']) !!}
+            </div>
+        @endif
+
+        <x-form x-data="Form()" is-post has-files :action="route('user.issues.store')" :bind-data="$issue">
             @if ($source)
-                <p>{!! __('Cloned from :key. Comments, attachments, status and assignee are not copied.', ['key' => '<a href="' . e(route('user.issues.show', $source)) . '">' . e($source->key) . '</a>']) !!}</p>
-            @else
-                <p>{{ __('Log a customer complaint, suggestion or bug') }}</p>
+                <input type="hidden" name="cloned_from" value="{{ $source->key }}" />
             @endif
-        </div>
-    </div>
 
-    <div class="row g-4 align-items-start">
-        <div class="col-lg-8 col-xl-9" style="max-width: 820px">
-            <div class="card">
-                <div class="card-body">
-                    <x-form x-data="Form()" is-post has-files :action="route('user.issues.store')" :bind-data="$issue">
-                        @if ($source)
-                            <input type="hidden" name="cloned_from" value="{{ $source->key }}" />
-                        @endif
+            <div class="row mb-3">
+                <x-label for="title" class="col-md-2" required>{{ __('Title') }}</x-label>
 
-                        <div class="mb-3">
-                            <x-label for="title" required>{{ __('Title') }}</x-label>
-                            <x-input type="text" name="title" placeholder="{{ __('Short summary of the problem') }}" autofill />
-                            <x-error for="title" />
-                        </div>
+                <div class="col-md-6">
+                    <x-input type="text" name="title" placeholder="{{ __('Summarise the issue in one line...') }}" autofill />
 
-                        <div class="row g-3 mb-3">
-                            <div class="col-md-4">
-                                <x-label for="system" required>{{ __('System') }}</x-label>
-                                <x-select2 name="system" :options="\App\Enums\IssueSystem::labels()" :placeholder="__('Select system...')" autofill />
-                                <x-error for="system" />
-                            </div>
-
-                            <div class="col-md-4">
-                                <x-label for="type" required>{{ __('Type') }}</x-label>
-                                <x-select2 name="type" :options="\App\Enums\IssueType::labels()" :placeholder="__('Select type...')" autofill />
-                                <x-error for="type" />
-                            </div>
-
-                            <div class="col-md-4">
-                                <x-label for="priority" required>{{ __('Priority') }}</x-label>
-                                <x-select2 name="priority" :options="\App\Enums\IssuePriority::labels()" autofill />
-                                <x-help>{{ __('Urgent = merchant cannot operate (e.g. cannot take payments)') }}</x-help>
-                                <x-error for="priority" />
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <x-label for="merchant_name">{{ __('Merchant / Customer') }}</x-label>
-                            <x-input type="text" name="merchant_name" placeholder="{{ __('Enter merchant name...') }}" autofill />
-                            <x-help>{{ __('Leave empty for internal issues') }}</x-help>
-                            <x-error for="merchant_name" />
-                        </div>
-
-                        <div class="mb-3">
-                            <x-label for="description" required>{{ __('Description') }}</x-label>
-                            <x-textarea name="description" rows="6" placeholder="{{ __('What happened? What should have happened? Steps to reproduce if known.') }}" autosize autofill />
-                            <x-error for="description" />
-                        </div>
-
-                        <div class="mb-4">
-                            <x-label for="attachments">{{ __('Attachments') }}</x-label>
-                            <div class="upload-box">
-                                <span class="fas fa-cloud-arrow-up fa-lg mb-2 d-block" aria-hidden="true"></span>
-                                <x-input type="file" name="attachments[]" id="attachments" accept="image/*,application/pdf" multiple />
-                                <x-help>{{ __('Images or PDF, up to 5 files, 5 MB each.') }}</x-help>
-                            </div>
-                            <x-error for="attachments" />
-                            <x-error for="attachments.*" />
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
-                            <a class="btn btn-outline" href="{{ route('user.main') }}">{{ __('Cancel') }}</a>
-                            <button type="submit" class="btn btn-primary">{{ __('Create Issue') }}</button>
-                        </div>
-                    </x-form>
+                    <x-error for="title" />
                 </div>
             </div>
-        </div>
 
-        <div class="col-lg-4 col-xl-3">
-            <aside class="card opie-tip">
-                <div class="card-body">
-                    <img src="{{ asset('images/opie/waving.webp') }}" alt="" />
-                    <h4>{{ __("Opie's tips for a faster fix") }}</h4>
-                    <ul>
-                        <li>{{ __('Add a screenshot of the problem') }}</li>
-                        <li>{{ __('Include the order or transaction number') }}</li>
-                        <li>{{ __('Say what the merchant expected to happen') }}</li>
-                    </ul>
+            <div class="row mb-3">
+                <x-label for="system" class="col-md-2" required>{{ __('System') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-select2 name="system" :options="\App\Enums\IssueSystem::labels()" :placeholder="__('Select system...')" autofill />
+
+                    <x-error for="system" />
                 </div>
-            </aside>
-        </div>
+            </div>
+
+            <div class="row mb-3">
+                <x-label for="type" class="col-md-2" required>{{ __('Type') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-select2 name="type" :options="\App\Enums\IssueType::labels()" :placeholder="__('Select type...')" autofill />
+
+                    <x-error for="type" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <x-label for="priority" class="col-md-2" required>{{ __('Priority') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-select2 name="priority" :options="\App\Enums\IssuePriority::labels()" autofill />
+
+                    <x-help>{{ __('Urgent = merchant cannot operate') }}</x-help>
+
+                    <x-error for="priority" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <x-label for="merchant_name" class="col-md-2">{{ __('Merchant Name') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-input type="text" name="merchant_name" placeholder="{{ __('Enter merchant name...') }}" autofill />
+
+                    <x-help>{{ __('Leave blank if the issue is not related to a merchant.') }}</x-help>
+
+                    <x-error for="merchant_name" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <x-label for="description" class="col-md-2" required>{{ __('Description') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-textarea name="description" rows="6" placeholder="{{ __('Describe what happened, steps to reproduce and what is expected...') }}" autosize autofill />
+
+                    <x-error for="description" />
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <x-label for="attachments" class="col-md-2">{{ __('Attachments') }}</x-label>
+
+                <div class="col-md-6">
+                    <x-input type="file" name="attachments[]" id="attachments" accept="image/*,application/pdf" multiple />
+
+                    <x-help>{{ __('Images or PDF, up to 5 files, 5 MB each.') }}</x-help>
+
+                    <x-error for="attachments" />
+                    <x-error for="attachments.*" />
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row mb-3">
+                <div class="col-md-6 offset-md-2">
+                    <button type="submit" class="btn btn-primary">
+                        {{ __('Submit') }}
+                    </button>
+                </div>
+            </div>
+        </x-form>
     </div>
 @endsection
 

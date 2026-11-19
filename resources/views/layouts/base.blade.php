@@ -42,7 +42,7 @@
 
         <!-- Fonts -->
         @if (!request()->isBolt())
-            <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&display=swap" bolt-pin />
+            <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap" bolt-pin />
         @endif
 
         @yield('head-extra')
@@ -58,7 +58,7 @@
         </script>
     </head>
 
-    <body class="@yield('body-class')">
+    <body>
         <div id="app-container">
             @yield('body')
             @yield('footer')

@@ -65,22 +65,6 @@ class User extends Authenticatable implements BannableContract, HasLocalePrefere
     }
 
     /**
-     * Get the user's initials for avatars.
-     */
-    protected function initials(): Attribute
-    {
-        return Attribute::get(function () {
-            $words = preg_split('/\s+/', trim((string) $this->name), -1, PREG_SPLIT_NO_EMPTY);
-
-            $initials = count($words) > 1
-                ? mb_substr($words[0], 0, 1) . mb_substr($words[1], 0, 1)
-                : mb_substr($words[0] ?? '?', 0, 2);
-
-            return mb_strtoupper($initials);
-        });
-    }
-
-    /**
      * Determine if the user is a programmer.
      */
     public function isProgrammer(): bool
