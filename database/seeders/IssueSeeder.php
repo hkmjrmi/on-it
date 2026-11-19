@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
-use App\Enums\IssueSource;
 use App\Enums\IssueProgress;
+use App\Enums\IssueSource;
 use App\Enums\IssueStatus;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;

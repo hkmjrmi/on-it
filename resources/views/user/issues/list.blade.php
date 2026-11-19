@@ -75,11 +75,19 @@
     </span>
 
     <div class="form-check form-switch ms-auto mb-0">
-        <input class="form-check-input" type="checkbox" role="switch" id="filter-archived" x-bind:checked="params.archived == 1" x-on:change="
-            params.archived = $event.target.checked ? 1 : 0
-            params.page = 1
-            load()
-        " @checked(request()->boolean('archived')) />
+        <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="filter-archived"
+            x-bind:checked="params.archived == 1"
+            x-on:change="
+                params.archived = $event.target.checked ? 1 : 0
+                params.page = 1
+                load()
+            "
+            @checked(request()->boolean('archived'))
+        />
         <label class="form-check-label small" for="filter-archived">{{ __('Archived issues only') }}</label>
     </div>
 </div>
