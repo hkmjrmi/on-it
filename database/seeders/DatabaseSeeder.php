@@ -42,6 +42,15 @@ class DatabaseSeeder extends Seeder
             'role' => UserRole::Programmer,
         ]);
 
+        User::firstOrCreate([
+            'email' => 'coordinator@test.com',
+        ], [
+            'name' => 'Test Coordinator',
+            'email_verified_at' => now(),
+            'password' => 'abcd1234',
+            'role' => UserRole::Coordinator,
+        ]);
+
         if (app()->isLocal()) {
             $this->call(IssueSeeder::class);
         }

@@ -73,6 +73,22 @@ class User extends Authenticatable implements BannableContract, HasLocalePrefere
     }
 
     /**
+     * Determine if the user is a coordinator.
+     */
+    public function isCoordinator(): bool
+    {
+        return $this->role === UserRole::Coordinator;
+    }
+
+    /**
+     * Determine if the user can triage issues: change status, priority and assignee.
+     */
+    public function canTriage(): bool
+    {
+        return $this->isProgrammer() || $this->isCoordinator();
+    }
+
+    /**
      * Determine if the user is a customer support.
      */
     public function isCustomerSupport(): bool

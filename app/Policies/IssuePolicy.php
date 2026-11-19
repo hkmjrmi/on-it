@@ -54,7 +54,7 @@ class IssuePolicy
      */
     public function changeWorkflow(User $user, Issue $issue): bool
     {
-        return $user->isProgrammer();
+        return $user->canTriage();
     }
 
     /**
@@ -62,7 +62,7 @@ class IssuePolicy
      */
     public function archive(User $user, Issue $issue): bool
     {
-        return $user->isProgrammer() && !$issue->isArchived() && $issue->status->in(IssueStatus::closed());
+        return $user->canTriage() && !$issue->isArchived() && $issue->status->in(IssueStatus::closed());
     }
 
     /**
@@ -70,7 +70,7 @@ class IssuePolicy
      */
     public function unarchive(User $user, Issue $issue): bool
     {
-        return $user->isProgrammer() && $issue->isArchived();
+        return $user->canTriage() && $issue->isArchived();
     }
 
     /**

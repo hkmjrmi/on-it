@@ -12,6 +12,7 @@ enum UserRole: string
 
     case CustomerSupport = 'customer_support';
     case Programmer = 'programmer';
+    case Coordinator = 'coordinator';
 
     /**
      * Get the label for the case.
@@ -21,6 +22,7 @@ enum UserRole: string
         return match ($this) {
             self::CustomerSupport => __('Customer Support'),
             self::Programmer => __('Programmer'),
+            self::Coordinator => __('Coordinator'),
         };
     }
 
