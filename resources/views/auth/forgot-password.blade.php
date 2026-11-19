@@ -10,7 +10,7 @@
             @endif
 
             <div class="card-header">
-                <img class="d-block mx-auto" src="{{ asset('images/logo.png') }}" style="width: 100px" />
+                <img class="d-block mx-auto" src="{{ asset('images/logo.png') }}" style="width: 160px" alt="{{ config('app.name') }}" />
             </div>
 
             <div class="card-body">

@@ -17,7 +17,7 @@
             {{-- Sidebar header --}}
             <div class="app-sidebar-header">
                 <a href="{{ route($area . '.main') }}" class="app-sidebar-brand">
-                    <img src="{{ asset('images/logo.png') }}" alt="logo" class="app-sidebar-logo" />
+                    <img src="{{ asset('images/logo-mark.png') }}" alt="" class="app-sidebar-logo" />
                     <span class="app-sidebar-brand-text">
                         {{ config('app.name') }}
                     </span>

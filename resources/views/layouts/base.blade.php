@@ -39,6 +39,7 @@
 
         <!-- Favicon -->
         <link rel="icon" type="image/png" href="{{ asset('images/favicon.png') }}" bolt-pin />
+        <link rel="apple-touch-icon" href="{{ asset('images/favicon.png') }}" bolt-pin />
 
         <!-- Fonts -->
         @if (!request()->isBolt())
