@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Actions\UpdateIssueWorkflow;
 use App\Enums\IssueActivityAction;
+use App\Enums\IssueStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\IssueBulkRequest;
 use App\Models\Issue;
@@ -48,6 +49,16 @@ class IssueBulkController extends Controller
                 $updated++;
 
                 continue;
+            }
+
+            if ($action === 'status') {
+                $status = IssueStatus::from($request->validated('status'));
+
+                if (Gate::denies('setStatus', [$issue, $status])) {
+                    $skipped[] = ['key' => $issue->key, 'reason' => $issue->status === $status ? __('No change') : __('Not allowed')];
+
+                    continue;
+                }
             }
 
             $column = $action === 'assignee' ? 'assigned_to' : $action;

@@ -10,13 +10,10 @@ enum IssueStatus: string
 {
     use EnumHelpers;
 
-    case New = 'new';
-    case InDevelopment = 'in_development';
-    case InReview = 'in_review';
-    case ReadyToRelease = 'ready_to_release';
-    case Released = 'released';
-    case NeedInfo = 'need_info';
-    case Rejected = 'rejected';
+    case Open = 'open';
+    case OnHold = 'on_hold';
+    case Closed = 'closed';
+    case WontFix = 'wont_fix';
 
     /**
      * Get the label for the case.
@@ -24,13 +21,23 @@ enum IssueStatus: string
     public function label(): string
     {
         return match ($this) {
-            self::New => __('New'),
-            self::InDevelopment => __('In Development'),
-            self::InReview => __('In Review'),
-            self::ReadyToRelease => __('Ready to Release'),
-            self::Released => __('Released'),
-            self::NeedInfo => __('Need Info'),
-            self::Rejected => __('Rejected'),
+            self::Open => __('Open'),
+            self::OnHold => __('On Hold'),
+            self::Closed => __('Closed'),
+            self::WontFix => __("Won't Fix"),
+        };
+    }
+
+    /**
+     * Get the label of the button that moves an issue to the case.
+     */
+    public function actionLabel(): string
+    {
+        return match ($this) {
+            self::Open => __('Reopen'),
+            self::OnHold => __('Put On Hold'),
+            self::Closed => __('Close Issue'),
+            self::WontFix => __("Mark Won't Fix"),
         };
     }
 
@@ -40,13 +47,10 @@ enum IssueStatus: string
     public function description(): string
     {
         return match ($this) {
-            self::New => __('Reported and waiting for a Programmer to pick it up.'),
-            self::InDevelopment => __('A Programmer is working on it.'),
-            self::InReview => __('The fix is done and being reviewed or tested.'),
-            self::ReadyToRelease => __('Approved and waiting for the next release.'),
-            self::Released => __('The fix is live for merchants.'),
-            self::NeedInfo => __('More details are needed from the reporter before work can continue.'),
-            self::Rejected => __('Will not be worked on, for example a duplicate or not a bug.'),
+            self::Open => __('Being handled. Progress shows where the work is.'),
+            self::OnHold => __('Paused, for example waiting on a decision or another fix.'),
+            self::Closed => __('Done. Customer Support has confirmed the outcome with the customer.'),
+            self::WontFix => __('Will not be worked on, for example a duplicate or not a bug. The reason is in the comments.'),
         };
     }
 
@@ -56,13 +60,10 @@ enum IssueStatus: string
     public function customerMessage(): string
     {
         return match ($this) {
-            self::New => __("We've received your report and passed it to our technical team."),
-            self::InDevelopment => __('Our programmer is working on this now.'),
-            self::InReview => __("The fix is done and is being checked by our team before release. We'll update you once it's live."),
-            self::ReadyToRelease => __("The fix is ready and will be included in our next update. We'll let you know once it's live."),
-            self::Released => __('The fix is now live. Could you try again and let us know if it works?'),
-            self::NeedInfo => __('Get the details from the customer and reply in the comments. Work is paused until you do.'),
-            self::Rejected => __("Explain using the reason in the comments. Ask a programmer if it's unclear."),
+            self::Open => __("We've received your report and passed it to our technical team."),
+            self::OnHold => __("This is on hold for now. We'll update you once work resumes."),
+            self::Closed => __('This has been resolved. Thank you for your patience.'),
+            self::WontFix => __("Explain using the reason in the comments. Ask a programmer if it's unclear."),
         };
     }
 
@@ -72,13 +73,10 @@ enum IssueStatus: string
     public function context(): string
     {
         return match ($this) {
-            self::New => 'secondary',
-            self::InDevelopment => 'primary',
-            self::InReview => 'info',
-            self::ReadyToRelease => 'dark',
-            self::Released => 'success',
-            self::NeedInfo => 'warning',
-            self::Rejected => 'danger',
+            self::Open => 'primary',
+            self::OnHold => 'warning',
+            self::Closed => 'success',
+            self::WontFix => 'secondary',
         };
     }
 
@@ -91,37 +89,13 @@ enum IssueStatus: string
     }
 
     /**
-     * Determine if the case is one of the main progress steps.
-     */
-    public function isMainStep(): bool
-    {
-        return $this->in(self::mainSteps());
-    }
-
-    /**
-     * Get the main progress steps in order.
+     * Get the statuses of resolved issues, which can be archived.
      *
      * @return array<int, self>
      */
-    public static function mainSteps(): array
+    public static function resolved(): array
     {
-        return [
-            self::New,
-            self::InDevelopment,
-            self::InReview,
-            self::ReadyToRelease,
-            self::Released,
-        ];
-    }
-
-    /**
-     * Get the statuses of closed issues.
-     *
-     * @return array<int, self>
-     */
-    public static function closed(): array
-    {
-        return [self::Released, self::Rejected];
+        return [self::Closed, self::WontFix];
     }
 
     /**

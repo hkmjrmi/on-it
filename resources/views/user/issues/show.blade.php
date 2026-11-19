@@ -30,6 +30,14 @@
                         </a>
                     @endcan
 
+                    @cannot('changeWorkflow', $issue)
+                        @foreach ($issue->statusOptionsFor(auth()->user()) as $status)
+                            <x-button-form class="btn btn-outline-{{ $status->context() }} btn-sm text-nowrap" :action="route('user.issues.status', $issue)" method="PATCH" :data="['status' => $status->value]">
+                                {{ $status->actionLabel() }}
+                            </x-button-form>
+                        @endforeach
+                    @endcannot
+
                     @can('archive', $issue)
                         <x-button-form class="btn btn-outline-dark btn-sm text-nowrap" :action="route('user.issues.archive', $issue)">
                             <span class="fas fa-box-archive"></span>
@@ -55,6 +63,7 @@
 
             <div class="d-flex flex-wrap gap-2">
                 <span class="badge {{ $issue->status->badgeClass() }}">{{ $issue->status->label() }}</span>
+                <span class="badge {{ $issue->progress->badgeClass() }}">{{ $issue->progress->label() }}</span>
                 <span class="badge {{ $issue->priority->badgeClass() }}">{{ $issue->priority->label() }}</span>
                 <span class="badge text-bg-light border">{{ $issue->type->label() }}</span>
 
@@ -168,11 +177,17 @@
                     <div class="card-header">{{ __('Details') }}</div>
                     <div class="card-body">
                         @can('changeWorkflow', $issue)
-                            <x-form x-data="WorkflowForm()" is-patch :action="route('user.issues.workflow', $issue)" :bind-data="['status' => $issue->status->value, 'priority' => $issue->priority->value, 'assigned_to' => $issue->assigned_to]" class="mb-3">
+                            <x-form x-data="WorkflowForm()" is-patch :action="route('user.issues.workflow', $issue)" :bind-data="['status' => $issue->status->value, 'progress' => $issue->progress->value, 'priority' => $issue->priority->value, 'assigned_to' => $issue->assigned_to]" class="mb-3">
                                 <div class="mb-2">
                                     <x-label for="status">{{ __('Status') }}</x-label>
-                                    <x-select2 name="status" :options="\App\Enums\IssueStatus::labels()" autofill />
+                                    <x-select2 name="status" :options="collect([$issue->status, ...$issue->statusOptionsFor(auth()->user())])->mapWithKeys(fn ($status) => [$status->value => $status->label()])->all()" autofill />
                                     <x-error for="status" />
+                                </div>
+
+                                <div class="mb-2">
+                                    <x-label for="progress">{{ __('Progress') }}</x-label>
+                                    <x-select2 name="progress" :options="\App\Enums\IssueProgress::labels()" autofill />
+                                    <x-error for="progress" />
                                 </div>
 
                                 <div class="mb-2">
@@ -196,6 +211,11 @@
                                 <dt>{{ __('Status') }}</dt>
                                 <dd>
                                     <span class="badge {{ $issue->status->badgeClass() }}">{{ $issue->status->label() }}</span>
+                                </dd>
+
+                                <dt>{{ __('Progress') }}</dt>
+                                <dd>
+                                    <span class="badge {{ $issue->progress->badgeClass() }}">{{ $issue->progress->label() }}</span>
                                 </dd>
 
                                 <dt>{{ __('Priority') }}</dt>

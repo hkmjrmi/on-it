@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -78,6 +79,11 @@ class IssueActivity extends Model
                 'name' => $name,
                 'from' => IssueStatus::tryFrom((string) $this->from_value)?->label() ?? '-',
                 'to' => IssueStatus::tryFrom((string) $this->to_value)?->label() ?? '-',
+            ]),
+            IssueActivityAction::ProgressChanged => __(':name changed progress :from → :to', [
+                'name' => $name,
+                'from' => IssueProgress::tryFrom((string) $this->from_value)?->label() ?? '-',
+                'to' => IssueProgress::tryFrom((string) $this->to_value)?->label() ?? '-',
             ]),
             IssueActivityAction::PriorityChanged => __(':name changed priority :from → :to', [
                 'name' => $name,

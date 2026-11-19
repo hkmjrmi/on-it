@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\IssuePriority;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\UserRole;
 use App\Models\User;
@@ -29,6 +30,7 @@ class IssueWorkflowRequest extends FormRequest
 
         return [
             'status' => ['required', 'enum:' . IssueStatus::class],
+            'progress' => ['required', 'enum:' . IssueProgress::class],
             'priority' => ['required', 'enum:' . IssuePriority::class],
             'assigned_to' => ['nullable', 'integer', 'in:' . $programmerIds->join(',')],
         ];

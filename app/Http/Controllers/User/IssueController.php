@@ -5,6 +5,7 @@ namespace App\Http\Controllers\User;
 use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;
@@ -115,6 +116,7 @@ class IssueController extends Controller
     {
         return Issue::query()
             ->status($request->enum('status', IssueStatus::class))
+            ->progress($request->enum('progress', IssueProgress::class))
             ->type($request->enum('type', IssueType::class))
             ->system($request->enum('system', IssueSystem::class))
             ->priority($request->enum('priority', IssuePriority::class))
@@ -128,6 +130,7 @@ class IssueController extends Controller
                 'title',
                 'priority' => fn (Builder $query, $direction) => $query->orderByEnum('priority', IssuePriority::cases(), $direction),
                 'status' => fn (Builder $query, $direction) => $query->orderByEnum('status', IssueStatus::cases(), $direction),
+                'progress' => fn (Builder $query, $direction) => $query->orderByEnum('progress', IssueProgress::cases(), $direction),
                 'created_at',
             ]);
     }
@@ -137,7 +140,7 @@ class IssueController extends Controller
      */
     protected function paginate(Builder $query): LengthAwarePaginator
     {
-        return $query->select(['id', 'key', 'title', 'type', 'system', 'priority', 'status', 'assigned_to', 'created_at'])
+        return $query->select(['id', 'key', 'title', 'type', 'system', 'priority', 'status', 'progress', 'assigned_to', 'created_at'])
             ->with('assignee:id,name')
             ->paginate(20)
             ->withQueryString();
@@ -163,21 +166,24 @@ class IssueController extends Controller
      */
     protected function summary(): array
     {
-        $statusCounts = Issue::query()
-            ->whereIn('status', [IssueStatus::New, IssueStatus::InDevelopment, IssueStatus::InReview, IssueStatus::ReadyToRelease])
-            ->groupBy('status')
-            ->selectRaw('status, count(*) as total')
-            ->pluck('total', 'status');
+        $progressCounts = Issue::query()
+            ->open()
+            ->archived(false)
+            ->whereIn('progress', [IssueProgress::New, IssueProgress::InDevelopment, IssueProgress::InReview, IssueProgress::ReadyToRelease])
+            ->groupBy('progress')
+            ->selectRaw('progress, count(*) as total')
+            ->pluck('total', 'progress');
 
         return [
-            ...collect([IssueStatus::New, IssueStatus::InDevelopment, IssueStatus::InReview, IssueStatus::ReadyToRelease])
-                ->mapWithKeys(fn (IssueStatus $status) => [$status->value => (int) ($statusCounts[$status->value] ?? 0)])
+            ...collect([IssueProgress::New, IssueProgress::InDevelopment, IssueProgress::InReview, IssueProgress::ReadyToRelease])
+                ->mapWithKeys(fn (IssueProgress $progress) => [$progress->value => (int) ($progressCounts[$progress->value] ?? 0)])
                 ->all(),
             'released_this_week' => Issue::query()->archived(false)->releasedThisWeek()->count(),
             'unassigned' => Issue::query()
                 ->open()
                 ->assignee('unassigned')
                 ->count(),
+            'on_hold' => Issue::query()->archived(false)->status(IssueStatus::OnHold)->count(),
         ];
     }
 
@@ -215,7 +221,8 @@ class IssueController extends Controller
             $issue = Issue::create([
                 ...$request->safe()->except(['attachments', 'cloned_from']),
                 'source' => IssueSource::fromRole($user->role),
-                'status' => IssueStatus::New,
+                'progress' => IssueProgress::New,
+                'status' => IssueStatus::Open,
                 'created_by' => $user->id,
             ]);
 

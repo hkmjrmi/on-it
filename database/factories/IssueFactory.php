@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Enums\IssuePriority;
 use App\Enums\IssueSource;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;
@@ -23,7 +24,7 @@ class IssueFactory extends Factory
      */
     public function definition(): array
     {
-        $status = fake()->randomElement(IssueStatus::cases());
+        $progress = fake()->randomElement(IssueProgress::cases());
         $source = fake()->randomElement(IssueSource::cases());
 
         return [
@@ -32,12 +33,13 @@ class IssueFactory extends Factory
             'type' => fake()->randomElement(IssueType::cases()),
             'system' => fake()->randomElement(IssueSystem::cases()),
             'priority' => fake()->randomElement(IssuePriority::cases()),
-            'status' => $status,
+            'progress' => $progress,
+            'status' => IssueStatus::Open,
             'source' => $source,
             'merchant_name' => $source === IssueSource::CustomerReport ? fake()->company() : null,
             'created_by' => User::factory(),
-            'assigned_to' => $status === IssueStatus::New ? null : User::factory(),
-            'released_at' => $status === IssueStatus::Released ? fake()->dateTimeBetween('-2 weeks') : null,
+            'assigned_to' => $progress === IssueProgress::New ? null : User::factory(),
+            'released_at' => $progress === IssueProgress::Released ? fake()->dateTimeBetween('-2 weeks') : null,
         ];
     }
 
@@ -48,7 +50,17 @@ class IssueFactory extends Factory
     {
         return $this->state(fn (array $attributes) => [
             'status' => $status,
-            'released_at' => $status === IssueStatus::Released ? now() : null,
+        ]);
+    }
+
+    /**
+     * Indicate that the issue has the given progress.
+     */
+    public function progress(IssueProgress $progress): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'progress' => $progress,
+            'released_at' => $progress === IssueProgress::Released ? now() : null,
         ]);
     }
 

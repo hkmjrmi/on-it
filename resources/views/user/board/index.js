@@ -2,19 +2,19 @@ Alpine.data('BoardPage', () => ({
     dragging: null,
     over: null,
 
-    drop(status) {
+    drop(progress) {
         const card = this.dragging;
         this.dragging = null;
         this.over = null;
 
-        if (!card || card.status === status) {
+        if (!card || card.progress === progress) {
             return;
         }
 
         Helper.showPageSpinner();
 
         axios
-            .patch(zroute('user.issues.board.move', card.key), { status })
+            .patch(zroute('user.issues.board.move', card.key), { progress })
             .then((response) => {
                 Bolt.once('unload', () => {
                     Helper.removePageSpinner();

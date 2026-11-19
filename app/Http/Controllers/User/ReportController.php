@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Enums\IssueActivityAction;
 use App\Enums\IssuePriority;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\IssueSystem;
 use App\Enums\IssueType;
@@ -41,7 +42,7 @@ class ReportController extends Controller
 
         $resolved = IssueActivity::query()
             ->where('action', IssueActivityAction::StatusChanged)
-            ->whereIn('to_value', array_map(fn (IssueStatus $status) => $status->value, IssueStatus::closed()))
+            ->whereIn('to_value', array_map(fn (IssueStatus $status) => $status->value, IssueStatus::resolved()))
             ->where('created_at', '>=', $start)
             ->whereHas('issue')
             ->get(['issue_id', 'created_at'])
@@ -49,7 +50,7 @@ class ReportController extends Controller
             ->map(fn (Collection $activities) => $activities->unique('issue_id')->count());
 
         $released = Issue::query()
-            ->status(IssueStatus::Released)
+            ->progress(IssueProgress::Released)
             ->where('released_at', '>=', $start)
             ->get(['created_at', 'released_at'])
             ->groupBy(fn (Issue $issue) => $weekOf($issue->released_at));

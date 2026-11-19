@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use App\Enums\IssuePriority;
+use App\Enums\IssueProgress;
 use App\Enums\IssueStatus;
 use App\Enums\UserRole;
 use App\Models\User;
@@ -15,7 +16,7 @@ class IssueBulkRequest extends FormRequest
      *
      * @var array<int, string>
      */
-    public const array ACTIONS = ['status', 'priority', 'assignee', 'archive'];
+    public const array ACTIONS = ['status', 'progress', 'priority', 'assignee', 'archive'];
 
     /**
      * Determine if the user is authorized to make this request.
@@ -39,6 +40,7 @@ class IssueBulkRequest extends FormRequest
             'ids.*' => ['integer', 'distinct'],
             'action' => ['required', 'in:' . implode(',', self::ACTIONS)],
             'status' => ['required_if:action,status', 'nullable', 'enum:' . IssueStatus::class],
+            'progress' => ['required_if:action,progress', 'nullable', 'enum:' . IssueProgress::class],
             'priority' => ['required_if:action,priority', 'nullable', 'enum:' . IssuePriority::class],
             'assigned_to' => ['nullable', 'integer', 'in:' . $programmerIds->join(',')],
         ];

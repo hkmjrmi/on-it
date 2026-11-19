@@ -6,7 +6,7 @@
 
 @section('content')
     <div x-data="BoardPage()">
-        <p class="text-muted">{{ $canMove ? __('Drag a card to another column to change its status.') : __('Issues by status. Archived issues are hidden.') }}</p>
+        <p class="text-muted">{{ $canMove ? __('Drag a card to another column to change its progress.') : __('Open issues by progress. Archived issues are hidden.') }}</p>
 
         <form method="GET" action="{{ route('user.board') }}" class="row g-2 mb-3" x-ref="filters">
             <div class="col-6 col-md-3">
@@ -24,14 +24,14 @@
 
         <div class="d-flex gap-3 pb-3 align-items-start" style="overflow-x: auto">
             @foreach ($columns as $column)
-                <section class="card flex-shrink-0" style="width: 280px" data-status="{{ $column['status']->value }}" @if ($canMove)
-                                        x-on:dragover.prevent="over = @js($column['status']->value)"
-                                        x-on:dragleave="over = over === @js($column['status']->value) ? null : over"
-                                        x-on:drop.prevent="drop(@js($column['status']->value))"
-                                        x-bind:class="{ 'border-primary': over === @js($column['status']->value) && dragging?.status !== @js($column['status']->value) }"
+                <section class="card flex-shrink-0" style="width: 280px" data-progress="{{ $column['progress']->value }}" @if ($canMove)
+                                        x-on:dragover.prevent="over = @js($column['progress']->value)"
+                                        x-on:dragleave="over = over === @js($column['progress']->value) ? null : over"
+                                        x-on:drop.prevent="drop(@js($column['progress']->value))"
+                                        x-bind:class="{ 'border-primary': over === @js($column['progress']->value) && dragging?.progress !== @js($column['progress']->value) }"
                                     @endif>
                     <header class="card-header d-flex justify-content-between align-items-center">
-                        <span class="badge {{ $column['status']->badgeClass() }}">{{ $column['status']->label() }}</span>
+                        <span class="badge {{ $column['progress']->badgeClass() }}">{{ $column['progress']->label() }}</span>
                         <span class="text-muted small">{{ $column['total'] }}</span>
                     </header>
 
@@ -39,7 +39,7 @@
                         @forelse ($column['issues'] as $issue)
                             <a href="{{ route('user.issues.show', $issue) }}" class="card card-body p-2 text-reset text-decoration-none shadow-sm" @if ($canMove)
                                                                 draggable="true"
-                                                                x-on:dragstart="dragging = { key: @js($issue->key), status: @js($issue->status->value) }; $event.dataTransfer.effectAllowed = 'move'"
+                                                                x-on:dragstart="dragging = { key: @js($issue->key), progress: @js($issue->progress->value) }; $event.dataTransfer.effectAllowed = 'move'"
                                                                 x-on:dragend="dragging = null; over = null"
                                                                 x-bind:style="dragging?.key === @js($issue->key) ? 'opacity: .5' : ''"
                                                             @endif>
