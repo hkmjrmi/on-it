@@ -25,6 +25,15 @@ return [
         ],
     ],
 
+    'github' => [
+        'app_id' => env('GITHUB_APP_ID'),
+        'installation_id' => env('GITHUB_APP_INSTALLATION_ID'),
+        'private_key' => env('GITHUB_APP_PRIVATE_KEY'),
+        'private_key_path' => env('GITHUB_APP_PRIVATE_KEY_PATH'),
+        'repository' => env('GITHUB_REPOSITORY'),
+        'webhook_secret' => env('GITHUB_WEBHOOK_SECRET'),
+    ],
+
     'hcaptcha' => [
         'sitekey' => env('HCAPTCHA_SITEKEY'),
         'secret' => env('HCAPTCHA_SECRET'),

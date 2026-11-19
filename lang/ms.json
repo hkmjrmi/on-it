@@ -318,5 +318,11 @@
     "Issue :key is now :status.": "Isu :key kini :status.",
     "Every issue has a status and a progress. The status says whether the issue is still being handled. The progress says where the work is.": "Setiap isu mempunyai status dan kemajuan. Status menunjukkan sama ada isu masih dikendalikan. Kemajuan menunjukkan di mana kerja berada.",
     "Drag a card to another column to change its progress.": "Seret kad ke lajur lain untuk menukar kemajuannya.",
-    "Open issues by progress. Archived issues are hidden.": "Isu terbuka mengikut kemajuan. Isu yang diarkibkan disembunyikan."
+    "Open issues by progress. Archived issues are hidden.": "Isu terbuka mengikut kemajuan. Isu yang diarkibkan disembunyikan.",
+    "Sent to GitHub": "Dihantar ke GitHub",
+    ":name created GitHub issue #:number": ":name mencipta isu GitHub #:number",
+    "GitHub did not accept the issue: :message": "GitHub tidak menerima isu ini: :message",
+    "GitHub issue #:number has been created.": "Isu GitHub #:number telah dicipta.",
+    "Send to GitHub": "Hantar ke GitHub",
+    "GitHub Issue": "Isu GitHub"
 }

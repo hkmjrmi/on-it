@@ -7,6 +7,7 @@ use App\Enums\IssueStatus;
 use App\Models\Issue;
 use App\Models\IssueComment;
 use App\Models\User;
+use App\Services\GitHub;
 
 class IssuePolicy
 {
@@ -79,6 +80,14 @@ class IssuePolicy
                 : $status === IssueStatus::Open && $issue->isResolved(),
             default => false,
         };
+    }
+
+    /**
+     * Determine whether the user can create a GitHub issue for the issue.
+     */
+    public function sendToGitHub(User $user, Issue $issue): bool
+    {
+        return $user->canTriage() && $issue->github_issue_number === null && !$issue->isResolved() && app(GitHub::class)->configured();
     }
 
     /**

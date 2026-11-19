@@ -75,6 +75,7 @@ class IssueActivity extends Model
             IssueActivityAction::CommentDeleted => __(':name deleted a comment', ['name' => $name]),
             IssueActivityAction::Archived => __(':name archived the issue', ['name' => $name]),
             IssueActivityAction::Unarchived => __(':name unarchived the issue', ['name' => $name]),
+            IssueActivityAction::GitHubLinked => __(':name created GitHub issue #:number', ['name' => $name, 'number' => $this->to_value]),
             IssueActivityAction::StatusChanged => __(':name changed status :from → :to', [
                 'name' => $name,
                 'from' => IssueStatus::tryFrom((string) $this->from_value)?->label() ?? '-',
