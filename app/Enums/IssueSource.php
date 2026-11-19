@@ -31,7 +31,7 @@ enum IssueSource: string
     {
         return match ($role) {
             UserRole::CustomerSupport => self::CustomerReport,
-            UserRole::Programmer => self::Internal,
+            UserRole::Programmer, UserRole::Coordinator => self::Internal,
         };
     }
 

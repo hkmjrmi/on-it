@@ -47,6 +47,16 @@ class UserFactory extends Factory
     }
 
     /**
+     * Indicate that the user is a coordinator.
+     */
+    public function coordinator(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'role' => UserRole::Coordinator,
+        ]);
+    }
+
+    /**
      * Indicate that the user is a customer support.
      */
     public function customerSupport(): static

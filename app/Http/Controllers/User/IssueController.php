@@ -242,7 +242,7 @@ class IssueController extends Controller
         });
 
         Notification::send(
-            User::query()->receivesNotifications()->where('role', UserRole::Programmer)->whereKeyNot($user->id)->get(),
+            User::query()->receivesNotifications()->whereIn('role', [UserRole::Programmer, UserRole::Coordinator])->whereKeyNot($user->id)->get(),
             new IssueCreatedNotification($issue, $user),
         );
 
