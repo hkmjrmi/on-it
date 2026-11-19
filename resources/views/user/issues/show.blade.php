@@ -38,6 +38,13 @@
                         @endforeach
                     @endcannot
 
+                    @can('sendToGitHub', $issue)
+                        <x-button-form class="btn btn-outline-dark btn-sm text-nowrap" :action="route('user.issues.github.store', $issue)">
+                            <span class="fab fa-github"></span>
+                            {{ __('Send to GitHub') }}
+                        </x-button-form>
+                    @endcan
+
                     @can('archive', $issue)
                         <x-button-form class="btn btn-outline-dark btn-sm text-nowrap" :action="route('user.issues.archive', $issue)">
                             <span class="fas fa-box-archive"></span>
@@ -229,6 +236,15 @@
 
                             <dt>{{ __('System') }}</dt>
                             <dd>{{ $issue->system?->label() ?? '-' }}</dd>
+
+                            <dt>{{ __('GitHub Issue') }}</dt>
+                            <dd>
+                                @if ($issue->github_issue_url)
+                                    <a href="{{ $issue->github_issue_url }}" target="_blank" rel="noopener">#{{ $issue->github_issue_number }}</a>
+                                @else
+                                    -
+                                @endif
+                            </dd>
 
                             <dt>{{ __('Merchant') }}</dt>
                             <dd>{{ $issue->merchant_name ?? '-' }}</dd>

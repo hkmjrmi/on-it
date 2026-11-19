@@ -47,6 +47,8 @@ class Issue extends Model
         'merchant_name',
         'created_by',
         'assigned_to',
+        'github_issue_number',
+        'github_issue_url',
         'released_at',
         'archived_at',
     ];

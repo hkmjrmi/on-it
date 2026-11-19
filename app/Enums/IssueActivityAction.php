@@ -21,6 +21,7 @@ enum IssueActivityAction: string
     case CommentDeleted = 'comment_deleted';
     case Archived = 'archived';
     case Unarchived = 'unarchived';
+    case GitHubLinked = 'github_linked';
 
     /**
      * Get the label for the case.
@@ -39,6 +40,7 @@ enum IssueActivityAction: string
             self::CommentDeleted => __('Comment Deleted'),
             self::Archived => __('Archived'),
             self::Unarchived => __('Unarchived'),
+            self::GitHubLinked => __('Sent to GitHub'),
         };
     }
 

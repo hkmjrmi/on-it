@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Str;
 use Onpay\Core\Auth\Authenticatable;
 use Onpay\Core\Eloquent\Concerns\Bannable;
 use Onpay\Core\Eloquent\Concerns\SortStringResolver;
@@ -86,6 +87,23 @@ class User extends Authenticatable implements BannableContract, HasLocalePrefere
     public function canTriage(): bool
     {
         return $this->isProgrammer() || $this->isCoordinator();
+    }
+
+    /**
+     * Get the system user that GitHub webhook changes are logged as.
+     *
+     * The user is banned, so it cannot log in or receive notifications.
+     */
+    public static function gitHub(): self
+    {
+        return static::query()->where('email', 'github@onit.invalid')->first()
+            ?? tap(new static(), fn (self $user) => $user->forceFill([
+                'name' => 'GitHub',
+                'email' => 'github@onit.invalid',
+                'password' => Str::random(40),
+                'role' => UserRole::Coordinator,
+                'banned_at' => now(),
+            ])->save());
     }
 
     /**
